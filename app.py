@@ -4,6 +4,9 @@ import re
 
 from flask import Flask, render_template, request, jsonify
 
+import json
+from bson import ObjectId
+
 from pymongo import MongoClient
 client = MongoClient('localhost', 27017)
 db = client.jungle_week0
@@ -75,6 +78,18 @@ def ismember():
     return jsonify({"result": "pw_fail"})
   
   return jsonify({"result": "success"})
+
+# 작성하고 아래로 옮기자
+@app.route('/user/feature/getinfo', methods=['POST'])
+def getInfo():
+  
+  id_receive = request.form["id_give"]
+  info = db.user.find_one({"Id": id_receive})
+  
+  if info:
+    info["_id"] = str(info["_id"])
+
+  return jsonify({"result": "success", "user_info": info})
 
 @app.route("/user/login")
 def logInPage():

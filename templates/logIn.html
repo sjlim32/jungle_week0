@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<!-- JS -->
+  <!-- JS -->
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
   <title>정글 한 줄</title>
@@ -13,7 +14,7 @@
     .topSection {
       height: 10rem;
       background-color: burlywood;
-  }
+    }
 
     .logo {
       width: 10rem;
@@ -26,7 +27,7 @@
       margin-top: 5rem;
     }
 
-    #Title{
+    #Title {
       text-align: center;
     }
 
@@ -65,36 +66,41 @@
     .button {
       margin: 1rem;
     }
-
   </style>
 
   <script>
-  // login 데이터(id, pw)를 받아옴
-  function postInfo(){
-    let id = $("#id").val()
-    let pw = $("#password").val()
+    // login 데이터(id, pw)를 받아오기.
+    function postInfo() {
+      let id = $("#id").val()
+      let pw = $("#password").val()
 
-    // postInfo에 POST 방식으로 메모 생성 요청하기
-    $.ajax({
-      type: "POST", // POST 방식으로 요청
-      url: "/user/feature/login", // user/feature/login 이라는 url에 요청
-      data: {id_give: id, pw_give: pw}, // 데이터를 넘겨줌 
-      success: function (response) { // API로부터 성공적으로 응답을 받는다면,
-        if (response["result"] == "success") {
-          alert("로그인 성공!");
-          // 성공시 명단 페이지로 이동하기
-          window.location.href = 'http://localhost:5001/user/list';
-        } else if (response["result"] == "id_fail") {
-          alert("아이디가 없습니다.")
-        } else {
-          alert("비밀번호가 맞지 않습니다.")
+      // 변수 저장하기(세션 유지용)
+      var myId = id
+      sessionStorage.setItem("myId", myId)
+
+      // postInfo에 POST 방식으로 메모 생성 요청하기
+      $.ajax({
+        type: "POST", // POST 방식으로 요청
+        url: "/user/feature/login", // user/feature/login 이라는 url에 요청
+        data: { id_give: id, pw_give: pw }, // 데이터를 넘겨줌 
+        success: function (response) { // API로부터 성공적으로 응답을 받는다면,
+          if (response["result"] == "success") {
+            alert("로그인 성공!");
+            // 성공시 명단 페이지로 이동하기
+            // @@@@@@@@@@@@@@@ 잠시 /main/list -> /user/comment 로 임시 변경!!@@@@
+            window.location.href = '/user/comment';
+          } else if (response["result"] == "id_fail") {
+            alert("아이디가 없습니다.")
+          } else {
+            alert("비밀번호가 맞지 않습니다.")
+          }
         }
-      }
-    })
-  }
+      })
+    }
 
   </script>
 </head>
+
 <body>
   <section class="topSection">
     <div class="logo">
@@ -108,11 +114,13 @@
       <input class="inputBox" id="password" type="password" placeholder="비밀번호를 입력해주세요.">
       <span class="button_Container">
         <!-- type="submit"에서 "button"으로 수정 -->
-        <button onclick="postInfo()" class="button" type="button" >로그인</button>
+        <button onclick="postInfo()" class="button" type="button">로그인</button>
         <!-- location.href''은 페이지 이동(뒤로가기 가능) -->
-        <button onclick="location.href='http://localhost:5001/user/signup?'" class="button" type="button" >회원가입 하기</button>
+        <button onclick="location.href='http://localhost:5001/user/signup?'" class="button" type="button">회원가입
+          하기</button>
       </span>
     </form>
   </section>
 </body>
+
 </html>
