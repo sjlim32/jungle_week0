@@ -1,7 +1,6 @@
 from flask import Flask
-from flask import Flask, jsonify, render_template
-from pymongo import MongoClient
-from requests import request
+
+import re
 
 from flask import Flask, render_template, request, jsonify
 
@@ -19,6 +18,8 @@ def singup():
   Pw = request.form['password']
   Nickname = request.form['nickname']
   Myself = request.form['myself']
+  Img = request.files['file']
+  
   doc ={
     "Name":Name,
     "Id":Id,
@@ -27,19 +28,26 @@ def singup():
     "Myself":Myself,
     "Comment":" ",
     "Img":" ",
-    "Gkeyword": [{'성실함':0},{'친화적':0},{'꼼꼼함':0},{'':0}],
-    "Bkeyword": [{'불성실함':0},{'':0},{'':0},{'':0}],
+    "Gkeyword": [{'성실함':0},{'친화적':0},{'꼼꼼함':0},{'끈기있는':0}],
+    "Bkeyword": [{'불성실함':0},{'비판적':0},{'비협조적':0},{'의지가 약한':0}],
     "Writed": " "
   }
   db.user.insert_one(doc)
   return render_template('index.html')
-#   키워드, 코멘트 넣기
-# @app.route('/user/comment', methods=['post']) 
-# def comment(Id):
-#   input_gkeyword = request.args.get('Gkeyword')
-#   input_bkeyword = request.args.get('Bkeyword')
-#   input_comment = request.args.get('Comment')
-#   db.users.update_one({'name':Id},{'$set':{'Comment':input_comment}})
+# 교육생 목록 
+@app.route('/user/feature/list', methods=['get'])
+def list():
+  users_names = list(db.users.find({},{"Name":1,"Gkeyword":1}))
+# 검색
+# @app.route('/user/feature/search', methods=['post'])
+# def search():
+#   user_name = request.form['name']
+#   regex_pattern = re.compile(f".*{user_name}.*")
+#   searched_names = list(db.users.find({"Name":{"$regex": regex_pattern}},{"Name":1,"Gkeyword":1}))
+# # 카테고리 정렬
+# @app.route('/user/feature/listsort', methods=['post'])
+# def listsort():
+#   sorted_user = list(db.users.find({}).sort[('name',-1),('gkeyword',-1)])
 
 @app.route("/")
 def home():
