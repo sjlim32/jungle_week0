@@ -3,11 +3,43 @@ from flask import Flask, jsonify, render_template
 from pymongo import MongoClient
 from requests import request
 
+from flask import Flask, render_template, request, jsonify
+
+from pymongo import MongoClient
+client = MongoClient('localhost', 27017)
+db = client.jungle_week0
 
 app = Flask(__name__)
-# mongoDB 추가
-client = MongoClient("localhost", 27017)
-db = client.dbjungle
+
+# 회원가입
+@app.route('/user/feature/signup', methods=['post'])
+def singup():
+  Name = request.form['name']
+  Id = request.form['id']
+  Pw = request.form['password']
+  Nickname = request.form['nickname']
+  Myself = request.form['myself']
+  doc ={
+    "Name":Name,
+    "Id":Id,
+    "Pw":Pw,
+    "Nickname":Nickname,
+    "Myself":Myself,
+    "Comment":" ",
+    "Img":" ",
+    "Gkeyword": [{'성실함':0},{'친화적':0},{'꼼꼼함':0},{'':0}],
+    "Bkeyword": [{'불성실함':0},{'':0},{'':0},{'':0}],
+    "Writed": " "
+  }
+  db.user.insert_one(doc)
+  return render_template('index.html')
+#   키워드, 코멘트 넣기
+# @app.route('/user/comment', methods=['post']) 
+# def comment(Id):
+#   input_gkeyword = request.args.get('Gkeyword')
+#   input_bkeyword = request.args.get('Bkeyword')
+#   input_comment = request.args.get('Comment')
+#   db.users.update_one({'name':Id},{'$set':{'Comment':input_comment}})
 
 @app.route("/")
 def home():
