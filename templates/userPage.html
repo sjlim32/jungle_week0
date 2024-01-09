@@ -1,8 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
   <title>정글 한 줄</title>
 
   <style>
@@ -32,6 +37,7 @@
       width: 10rem;
       height: 10rem;
     }
+
     .introduceBox {
       flex-direction: column;
       text-align: center;
@@ -69,10 +75,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-            
+
       width: 10rem;
       height: 3rem;
-      
+
       margin-left: 1rem;
 
       color: white;
@@ -86,14 +92,14 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      
+
       width: 10rem;
       height: 3rem;
-      
+
       margin-left: 1rem;
-      
+
       color: white;
-      background-color:steelblue;
+      background-color: steelblue;
       border-radius: 15px;
     }
 
@@ -127,17 +133,79 @@
       font-size: large;
       margin-left: 5rem;
     }
-
   </style>
 </head>
+<script>
+  // 변수 불러오기(세션 유지용)
+  var loadedId = sessionStorage.getItem("myId");
+
+  // [2-1] "페이지 로딩 후 함수가 실행되게 한다." 
+  $(document).ready(function () { // 페이지 로딩시 영화 정보를 출력하는 함수들을 실행되게 합니다.
+
+    // 유저 정보를 API로부터 받아오는 함수
+    showInfo()
+
+    // 내림 차순으로 정렬하는 함수
+    keywordSorter()
+
+    // displayTrashMode() // trash으 값에 따라 메뉴를 바꿔줍니다.
+  });
+
+  // API로부터 교육생 정보 받아오기
+  function showInfo() {
+    // 컨테이너 비우기
+    $('Info_Container').empty()
+
+    $.ajax({
+      type: "POST",
+      url: "/user/feature/getinfo",
+      data: { 'id_give': loadedId },
+      success: function (response) {
+        if (response['result'] != 'success') {
+          alert("정보를 받아오지 못했습니다.")
+          return
+        }
+
+        // API로부터 받은 response에서 user_info의 키 값으로 교육생 정보 얻기
+        let userInfo = response['user_info']
+
+        let name = userInfo['Name']
+        $('#myName').text(name)
+        let mySelf = userInfo['Myself']
+        $('#mySelf').text(mySelf)
+      }
+    })
+  }
+
+  // @@@@@@@@@@@@ 5:20 키워드 정렬까지 하다 잠들다. @@@@@@@@@
+  function keywordSorter() {
+    $('Info_Container').empty()
+
+    $.ajax({
+      type: "GET",
+      url: "/user/feature/getinfo",
+      data: { 'id_give': loadedId },
+      success: function (response) {
+        if (response['result'] != 'success') {
+          alert("정보를 받아오지 못했습니다.")
+          return
+        }
+      }       
+    })
+  }
+
+
+</script>
+
 <body>
   <section class="middleSection">
     <div id="info_Container">
-      <img class="ImgBox"/>
+      <img class="ImgBox" />
       <span>
         <div class="introduceBox">
-          <h2>이름</h2>
-          <div>자기소개</div>
+          <h1 id="myName"></h1>
+          <h3 id="mySelf"></h3>
+          <div></div>
         </div>
       </span>
     </div>
@@ -164,4 +232,5 @@
     </div>
   </section>
 </body>
+
 </html>
