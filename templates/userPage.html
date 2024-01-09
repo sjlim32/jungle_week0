@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>정글 한 줄</title>
+
+  <style>
+    .middleSection {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      margin-top: 5rem;
+    }
+
+    #info_Container {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-evenly;
+      align-items: center;
+
+      width: 50rem;
+      height: 25rem;
+      margin: 2rem 2rem;
+
+      border: 1px solid black;
+    }
+
+    .ImgBox {
+      width: 10rem;
+      height: 10rem;
+    }
+    .introduceBox {
+      flex-direction: column;
+      text-align: center;
+
+      width: 30rem;
+
+      border: 1px solid red;
+    }
+
+    .button {
+      font-size: larger;
+      width: 12rem;
+      height: 2.5rem;
+    }
+
+    #keyword_Container {
+      width: 75rem;
+      height: auto;
+      margin: 2rem 2rem;
+
+      border: 1px solid black;
+    }
+
+    .keywordBox {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      margin: 0 0 3rem 0;
+    }
+
+    .G_keyword {
+      font-size: larger;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+            
+      width: 10rem;
+      height: 3rem;
+      
+      margin-left: 1rem;
+
+      color: white;
+      background-color: firebrick;
+      border-radius: 15px;
+    }
+
+    .B_keyword {
+      font-size: larger;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      width: 10rem;
+      height: 3rem;
+      
+      margin-left: 1rem;
+      
+      color: white;
+      background-color:steelblue;
+      border-radius: 15px;
+    }
+
+    #comment_Container {
+      width: 75rem;
+      height: 25rem;
+
+      margin: 2rem 2rem;
+
+      border: 1px solid black;
+    }
+
+    .commentBox {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      height: 3rem;
+
+      margin: 2rem;
+
+      border: 1px solid green;
+    }
+
+    .nickname {
+      font-size: larger;
+      margin-left: 3rem;
+    }
+
+    .comment {
+      font-size: large;
+      margin-left: 5rem;
+    }
+
+  </style>
+</head>
+<body>
+  <section class="middleSection">
+    <div id="info_Container">
+      <img class="ImgBox"/>
+      <span>
+        <div class="introduceBox">
+          <h2>이름</h2>
+          <div>자기소개</div>
+        </div>
+      </span>
+    </div>
+    <button class="button" type="button" onclick="location.href='/user/writing'">등록하러 가기</button>
+    <div id="keyword_Container">
+      <h1 style="padding-left: 2rem;">키워드</h1>
+      <div class="keywordBox">
+        <div class="G_keyword">성실함</div>
+        <div class="G_keyword">열정적임</div>
+        <div class="G_keyword">친절함</div>
+      </div>
+      <div class="keywordBox">
+        <span class="B_keyword">게으름</span>
+        <span class="B_keyword">성급함</span>
+        <span class="B_keyword">지각쟁이</span>
+      </div>
+    </div>
+    <div id="comment_Container">
+      <h1 style="padding-left: 2rem;">한줄평</h1>
+      <div class="commentBox">
+        <div class="nickname">라이언일병</div>
+        <div class="comment">항상 웃는 얼굴이라 곁에 있으면 덩달아 즐거워지는 것 같아요!</div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

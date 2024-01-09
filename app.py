@@ -79,7 +79,15 @@ def signUpPage():
 
 @app.route("/main/list")
 def mainPage():
-  return render_template('mainPage')
+  return render_template('mainPage.html')
+
+@app.route("/user/comment")
+def userPage():
+  return render_template('userPage.html')
+
+@app.route("/user/writing")
+def writePage():
+  return render_template('writing.html')
 
 # ! Mac 환경에선 port 번호 5001, 배포 시에는 5000으로 수정
 if __name__ == "__main__":
