@@ -91,7 +91,7 @@
   <section class="topSection"></section>
 
   <section class="middleSection">
-    <form id="form_Container" action="http://localhost:5001/user/feature/signup" method="post">
+    <form id="form_Container" action="http://localhost:5001/user/feature/signup" method="post" enctype="multipart/form-data">
       <h1 id="Title">회원가입</h1>
       <input class="inputBox" id="id" name ="id" placeholder="아이디를 입력해주세요." required >
       <input class="inputBox" type="password" placeholder="비밀번호를 입력해주세요." required>
@@ -101,6 +101,7 @@
       <textarea class="textArea" name ="myself"placeholder="자기소개를 작성해주세요." style="resize: none;"></textarea>
       <span class="img_Container">
         <img class="imgBox" src="" alt="non picture" />
+        <input type="file" name="file">
         <button>이미지 등록하기</button>
       </span>
       <span class="button_Container">
