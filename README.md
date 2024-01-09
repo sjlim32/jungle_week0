@@ -15,4 +15,4 @@
 > sudo rm -rf 가상환경이름
 
 - 이후 pip(python install package)로 실행
-*ex) pip install bson
+*ex) pip install flask
