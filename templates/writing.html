@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+  <title>정글 한 줄</title>
+
+  <style>
+    .middleSection {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      margin-top: 5rem;
+    }
+
+    #keyword_Container {
+      width: 75rem;
+      height: auto;
+      margin: 2rem 2rem;
+
+      border: 1px solid black;
+    }
+
+    .keywordBox {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      margin: 0 0 3rem 0;
+    }
+
+    .keyword {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+            
+      width: 7rem;
+      height: 2rem;
+      
+      margin-left: 1rem;
+      
+      background-color: beige;
+      border-radius: 15px;
+    }
+
+    #comment_Container {
+      width: 75rem;
+      height: auto;
+      margin: 2rem 2rem;
+
+      border: 1px solid black;
+    }
+
+    .commentBox {
+      font-size: larger;
+      width: 70rem;
+      height: 1rem;
+      resize: none;
+      overflow:hidden;
+
+      padding: 1rem;
+      margin: 1rem;
+
+    
+      border-radius: 10px;
+    }
+
+    .button {
+      font-size: larger;
+      width: 12rem;
+      height: 2.5rem;
+
+      margin-bottom: 3rem;
+    }
+
+  </style>
+  <script>
+    // $(document).ready(function() {
+    //     $('#key').click(function() {
+    //         $(this).toggleClass('keyword');
+    //     });
+    // });
+
+
+  </script>  
+</head>
+
+<body>
+  <section class="middleSection">
+    <h1>춘식이</h1>
+
+    <div id="keyword_Container">
+      <h1 style="padding-left: 2rem;"> 장점 키워드를 선택해주세요. (최대 3개)</h1>
+      <div class="keywordBox">
+        <!-- <div id="key""><p>성실함</p></div>
+        <div id="key"><p>열정적임</p></div>
+        <div id="key"><p>친절함</p></div> -->
+        <span class="keyword">성실함</span>
+        <span class="keyword">열정적임</span>
+        <span class="keyword">친절함</span>
+      </div>
+      <h1 style="padding-left: 2rem;"> 단점 키워드를 선택해주세요. (최대 3개)</h1>
+      <div class="keywordBox">
+        <span class="keyword">게으름</span>
+        <span class="keyword">성급함</span>
+        <span class="keyword">지각쟁이</span>
+      </div>
+      <h1 style="padding-left: 2rem;"> 선택된 키워드</h1>
+      <div class="keywordBox">
+        <span class="keyword">게으름</span>
+        <span class="keyword">성급함</span>
+        <span class="keyword">지각쟁이</span>
+      </div>
+    </div> 
+  <div id="comment_Container">
+    <h1 style="padding-left: 2rem;"> 한줄평</h1>
+    <textarea class="commentBox" placeholder="한줄평을 작성해주세요."></textarea>
+  </div>
+
+  <button type="button" class="button">등록하기</button>
+  </section>
+</body>
+</html>

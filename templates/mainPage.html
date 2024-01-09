@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>정글 한 줄</title>
+
+  <style>
+    .middleSection {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+
+      margin-top: 5rem;
+
+      border: 1px solid black;
+    }
+
+    #search_Container {
+      flex-direction: column;
+      align-items: center;
+
+      width: auto;
+
+      margin-right: 5rem;
+
+      /* border: 1px solid black; */
+    }
+
+    .inputBox {
+      width: 30rem;
+      height: 2rem;
+
+      margin: 1rem;
+    }
+
+    #sort_Container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      width: 15rem;
+      height: 15rem;
+
+
+      /* border: 1px solid black; */
+    }
+
+    .sorter {
+      width: 10rem;
+      height: 2.5rem;
+      margin: 1rem;
+    }
+
+    .listSection {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+
+
+      border: 1px solid black;
+    }
+
+    #userBox {
+      width: 80rem;
+      height: 15rem;
+
+      border: 1px solid black;
+    }
+
+  </style>
+</head>
+<body>
+  <section class="middleSection">
+    <form id="search_Container">
+        <input class="inputBox" placeholder="검색할 이름을 입력해주세요.">
+        <button style="width:5rem; height:2rem;" type="submit">검색</button>
+    </form>
+    <div id="sort_Container">
+      <h3>정렬 방식</h3>
+      <button class="sorter" type="button">가나다 순으로</button>
+      <button class="sorter" type="button">키워드 많은 순으로</button>
+    </div>
+  </section>
+  <section class="listSection">
+    <h1>리스트 목록 보이는 곳</h1>
+    <div id="userBox">
+    <div>
+  </section>
+</body>
+</html>
