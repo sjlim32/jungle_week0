@@ -1,6 +1,6 @@
 from flask import Flask
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 
 from pymongo import MongoClient
 client = MongoClient('localhost', 27017)
@@ -9,14 +9,13 @@ db = client.jungle_week0
 app = Flask(__name__)
 
 # 회원가입
-@app.route('/user/singup', methods=['get'])
+@app.route('/user/feature/signup', methods=['post'])
 def singup():
-  Name = request.args.get('Name')
-  Id = request.args.get('Id')
-  Pw = request.args.get('Pw')
-  Nickname = request.args.get('Nickname')
-  Myself = request.args.get('Myself')
-  Img = request.args.get('Img')
+  Name = request.form['name']
+  Id = request.form['id']
+  Pw = request.form['password']
+  Nickname = request.form['nickname']
+  Myself = request.form['myself']
   doc ={
     "Name":Name,
     "Id":Id,
@@ -24,14 +23,14 @@ def singup():
     "Nickname":Nickname,
     "Myself":Myself,
     "Comment":" ",
-    "Img":Img,
-    "Gkeyword": [{'키워드1':0},{'키워드2':0}],
-    "Bkeyword": [{'키워드3':0},{'키워드4':0}],
+    "Img":" ",
+    "Gkeyword": [{'성실함':0},{'친화적':0},{'꼼꼼함':0},{'':0}],
+    "Bkeyword": [{'불성실함':0},{'':0},{'':0},{'':0}],
     "Writed": " "
   }
   db.user.insert_one(doc)
-
-  # 키워드, 코멘트 넣기
+  return render_template('index.html')
+#   키워드, 코멘트 넣기
 # @app.route('/user/comment', methods=['post']) 
 # def comment(Id):
 #   input_gkeyword = request.args.get('Gkeyword')
