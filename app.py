@@ -33,6 +33,7 @@ def singup():
     "Writed": " "
   }
   db.user.insert_one(doc)
+  
   return render_template('index.html')
 # 교육생 목록 
 @app.route('/user/feature/list', methods=['get'])
@@ -49,25 +50,31 @@ def list():
 # def listsort():
 #   sorted_user = list(db.users.find({}).sort[('name',-1),('gkeyword',-1)])
 
+# 메인 페이지
 @app.route("/")
 def home():
   return render_template('index.html')
 
-@app.route('/ismember', methods=['POST'])
-def post_ismember():
+# 로그인 페이지에서의 로그인 기능
+@app.route('/user/feature/login', methods=['POST'])
+def ismember():
+
   # 클라이언트로부터 데이터를 받기
   id_receive = request.form['id_give']
   pw_receive = request.form['pw_give']
   
-  id = db.hanjul.find_one({"id": id_receive})
-  pw = db.hanjul.find_one({"pw": pw_receive})
-  if id == '':
-    if pw == pw_receive:
-      return jsonify({"result": "success"})
-    else: 
-      return jsonify({"result": "pw_fail"})
-  else:
+  # 클라이언트로부터 받은 데이터와 DB의 데이터가 불일치할시, "NoneType" 객체 반환하는 것을 방지하기 위해 try문 작성
+  try:
+    id = db.user.find_one({"Id": id_receive})['Id']
+  except:
     return jsonify({"result": "id_fail"})
+  
+  try:
+    pw = db.user.find_one({"Pw": pw_receive})['Pw']
+  except:
+    return jsonify({"result": "pw_fail"})
+  
+  return jsonify({"result": "success"})
 
 @app.route("/user/login")
 def logInPage():
@@ -79,7 +86,15 @@ def signUpPage():
 
 @app.route("/main/list")
 def mainPage():
-  return render_template('mainPage')
+  return render_template('mainPage.html')
+
+@app.route("/user/comment")
+def userPage():
+  return render_template('userPage.html')
+
+@app.route("/user/writing")
+def writePage():
+  return render_template('writing.html')
 
 # ! Mac 환경에선 port 번호 5001, 배포 시에는 5000으로 수정
 if __name__ == "__main__":
