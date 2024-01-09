@@ -27,12 +27,14 @@ def singup():
     "Myself":Myself,
     "Comment":" ",
     "Img":" ",
-    "Gkeyword": [{'성실함':0},{'친화적':0},{'꼼꼼함':0},{'':0}],
-    "Bkeyword": [{'불성실함':0},{'':0},{'':0},{'':0}],
+    "Gkeyword": [{'성실함':0},{'친화적':0},{'꼼꼼함':0}],
+    "Bkeyword": [{'불성실함':0}],
     "Writed": " "
   }
   db.user.insert_one(doc)
+  
   return render_template('index.html')
+
 #   키워드, 코멘트 넣기
 # @app.route('/user/comment', methods=['post']) 
 # def comment(Id):
@@ -41,25 +43,31 @@ def singup():
 #   input_comment = request.args.get('Comment')
 #   db.users.update_one({'name':Id},{'$set':{'Comment':input_comment}})
 
+# 메인 페이지
 @app.route("/")
 def home():
   return render_template('index.html')
 
-@app.route('/ismember', methods=['POST'])
-def post_ismember():
+# 로그인 페이지에서의 로그인 기능
+@app.route('/user/feature/login', methods=['POST'])
+def ismember():
+
   # 클라이언트로부터 데이터를 받기
   id_receive = request.form['id_give']
   pw_receive = request.form['pw_give']
   
-  id = db.hanjul.find_one({"id": id_receive})
-  pw = db.hanjul.find_one({"pw": pw_receive})
-  if id == '':
-    if pw == pw_receive:
-      return jsonify({"result": "success"})
-    else: 
-      return jsonify({"result": "pw_fail"})
-  else:
+  # 클라이언트로부터 받은 데이터와 DB의 데이터가 불일치할시, "NoneType" 객체 반환하는 것을 방지하기 위해 try문 작성
+  try:
+    id = db.user.find_one({"Id": id_receive})['Id']
+  except:
     return jsonify({"result": "id_fail"})
+  
+  try:
+    pw = db.user.find_one({"Pw": pw_receive})['Pw']
+  except:
+    return jsonify({"result": "pw_fail"})
+  
+  return jsonify({"result": "success"})
 
 @app.route("/user/login")
 def logInPage():
