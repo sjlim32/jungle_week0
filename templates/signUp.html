@@ -87,6 +87,16 @@
     margin: 1rem;
   }
 </style>
+
+<script>
+function welcome(){
+  alert("회원가입 성공!");
+  window.location.href = '/user/login';
+}
+
+
+</script>
+
 <body>
   <section class="topSection"></section>
 
@@ -105,8 +115,8 @@
         <button>이미지 등록하기</button>
       </span>
       <span class="button_Container">
-        <button class="button" type="submit" >가입</button>
-        <button class="button" type="button" >취소</button>
+        <button class="button" type="submit" onclick="welcome()">가입</button>
+        <button class="button" type="button" onClick="location.href='/'" >취소</button>
       </span>
     </form>
   </section>
