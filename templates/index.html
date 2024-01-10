@@ -3,9 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ! Tailwind CSS CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+</head>
   <title>정글 한 줄</title>
 
-  <style>
+  <!-- <style>
     .middleSection {
       display: flex;
       flex-direction: column;
@@ -38,9 +42,11 @@
       margin: 1rem;
     }
 
-  </style>
+  </style> -->
 </head>
-<body>
+
+
+<!-- <body>
   <section class="middleSection">
     <div id="info_Container">
       <h1 style="font-size: xx-large;">정글 한 줄</h1>
@@ -50,6 +56,22 @@
     <div id="button_Container">
       <button class="button" type="button" onclick="location.href='/user/login'">로그인</button>
       <button class="button" type="button" onclick="location.href='/user/signup'">회원가입</button>
+    </div>
+  </section>
+</body> -->
+
+
+<!-- ! Tailwind 적용 -->
+<body>
+  <section class="flex-col mt-36">
+    <div class="flex-col justify-center pb-16">
+      <p class="text-4xl font-bold underline pb-10 text-center">정글 한 줄</p>
+      <p class="text-xl pb-4 text-center">정글 한 줄은, 크래프톤 정글 4기 동기들이 만들어가는 공간입니다.</p>
+      <p class="text-xl pb-4 text-center">일주일 단위로 진행되는 과제를 함께 해결한 뒤, 동료에 대한 키워드를 선택하고 한줄평을 작성할 수 있습니다.</p>
+    </div>
+    <div class="flex justify-center">
+      <button class="w-52 h-10 bg-green-700 text-white mr-16 rounded-xl" type="button" onclick="location.href='/user/login'">로그인</button>
+      <button class="w-52 h-10 bg-green-700 text-white rounded-xl" type="button" onclick="location.href='/user/signup'">회원가입</button>
     </div>
   </section>
 </body>
