@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>정글 한 줄</title>
+
   <!-- JS -->
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
   <style>
     .middleSection {
       display: flex;
@@ -72,24 +75,18 @@
 
       border: 1px solid black;
     }
-
   </style>
-  <!-- <script>
-  function list_sort(new_mode){
-    $.ajax({
-        type: "POST",
-        url: "/user/feature/listsort",
-        data: {'new_mode': new_mode},
-        success: function(response){
-            //console.log(response);
-            alert('성공')
-        }
-    });
-}
-  
 
-  </script> -->
+  <script>
+    // @@ 선택된 교육생 세션 유지용, 일단 스트링으로 표현, merge 후 수정 예정 @@
+    var pickId = "k"
+    sessionStorage.setItem("pickId", pickId)
+    // 아래는 로그인한 사용자 세션
+    var loadedId = sessionStorage.getItem("myId");
+
+  </script>
 </head>
+
 <body>
   <section class="middleSection">
     <form id="search_Container" action="http://localhost:5001/user/feature/search" method="post">
@@ -121,7 +118,8 @@
     <div>
   </section>
   <div>
-    
+
   </div>
 </body>
+
 </html>
