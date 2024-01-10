@@ -23,28 +23,8 @@ def getInfo():
 # 교육생의 장단점 키워드를 정렬
 @getInfo_bp.route('/getkey', methods=['POST'])
 def getKey():
-
   pid_receive = request.form["pid_give"]
-  info = db.user.find_one({"Id": pid_receive})
-  
-  GKey = info["Gkeyword"]
-  sorted_Gkey = sorted(GKey, key=lambda x: next(iter(x.values())), reverse=True) # GPT
-  print(GKey)
-  print(sorted_Gkey)
-
-  BKey = info["Bkeyword"]
-  sorted_Bkey = sorted(BKey, key=lambda x: next(iter(x.values())), reverse=True)
-  print(BKey)
-  print(sorted_Bkey)
-  Comments = info["Comment"]
-  Nick = info["Nickname"]
-
-  return jsonify({"result": "success", "GKey": sorted_Gkey, "BKey": sorted_Bkey, "Comment": Comments, "Nickname": Nick}) 
-
-@getInfo_bp.route('/getdata', methods=['POST'])
-def getData():
-  # flask의 request.form을 사용하여 key 값인 title을 전달
-  pid_receive = request.form["pid_give"]
+  id_receive = request.form["id_give"]
   comment_receive = request.form["comment_give"]
 
   # Flask에서 Ajax에서 보내준 문자열 데이터를 parsing하여 JSONArray로 변환
@@ -56,7 +36,6 @@ def getData():
   if not user_info:
     return jsonify({"result": 'error'})
 
-  # print(user_info)
   # Comment 업데이트 또는 추가
   if type(user_info['Comment']) != None:
     # DB에 comment가 저장돼 있으면 append
@@ -65,7 +44,16 @@ def getData():
     # DB에 comment가 없으면 새로운 리스트 생성
     user_info['Comment'] = [comment_receive]
 
+  # Writed 업데이트 또는 추가하기
+  if 'Writed' not in user_info:
+    user_info['Writed'] = [id_receive]
+  elif isinstance(user_info['Writed'], str):
+    user_info['Writed'] = [user_info['Writed'], id_receive]
+  else:
+    user_info['Writed'].append(id_receive)
 
+  print(user_info['Writed'])
+  
   # GKeyword 업데이트
   for g_key in selectedGKey:
       for db_g_key in user_info['Gkeyword']:
