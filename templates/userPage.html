@@ -194,14 +194,23 @@
         }
         let GKey = response['GKey']
         let BKey = response['BKey']
-        let Nick = response['Nickname']
+        // let Nick = response['Nickname']
         let Comments = response['Comment']
+        let IsShow = response['IsShow']
+        let IsWrited = response['IsWrited']
 
-        addKeyword(GKey, BKey, Nick, Comments)
+        if (loadedId == loadedPId && IsShow >= 10) {
+          $('#Bkey-list').css('display', 'flex');
+        } else {
+          $('#Bkey-list').css('display', 'none');
+        }
+
+        addKeyword(GKey, BKey, Comments, IsWrited)
       }
     })
 
-    function addKeyword(GKey, BKey, Nick, Comments) {
+
+    function addKeyword(GKey, BKey, Comments, IsWrited) {
       for (let i = 0; i < GKey.length; i++) {
         let GKeyValue = Object.keys(GKey[i]).join(", "); // GPT
 
@@ -214,20 +223,28 @@
       $('#Bkey-list').append(`
             <span class="B_keyword">${BKeyValue}</span>
         `);
+
+      for (let i = 0; i < Comments.length; i++) {
+        let Comment = Object.values(Comments[i]).join(", "); // GPT
+        $('#Comment-list').append(`
+          <div class="comment">${Comment}</div>
+        `);
+
+        if (IsWrited.includes(loadedId)) {
+          $('#Bkey-list').css('display', 'flex');
+          $('#Gkey-list').css('display', 'flex');
+          $('#Comment-list').css('display', 'flex');
+        } else {
+          $('#Bkey-list').css('display', 'none');
+          $('#Gkey-list').css('display', 'none');
+          $('#Comment-list').css('display', 'none');
+
+        }
+      }
     }
-
-    // @@ Comments 등록하기 전까지는 예외처리 @@
-    // for (let i = 0; i < Comments.length; i++) {
-    //   let Comment = Object.values(Comments[i]).join(", "); // GPT
-
-    //   $('#Comment-list').append(`
-    //       <div class="nickname">${Nick}</div>
-    //       <div class="comment">${Comment}</div>
-    //     `);
-    // }
   }
-
-// </script>
+</script>
+<html>
 
 <body>
   <section class="middleSection">
