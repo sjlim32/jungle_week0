@@ -141,17 +141,6 @@
   // @@ 선택한 교육생 세션, 수정 예정
   var loadedPId = sessionStorage.getItem("pickId");
 
-  // [2-1] "페이지 로딩 후 함수가 실행되게 한다." 
-  $(document).ready(function () { // 페이지 로딩시 영화 정보를 출력하는 함수들을 실행되게 합니다.
-    showInfo()
-
-    // 내림 차순으로 정렬하는 함수
-    keywordSorter()
-
-    // 한줄평을 DB로부터 받아오는 함수
-    // comments() 
-  });
-
   // API로부터 교육생 정보 받아오기
   function showInfo() {
     // 컨테이너 비우기

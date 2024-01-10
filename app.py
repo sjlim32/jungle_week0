@@ -105,7 +105,6 @@ def getData():
   if not user_info:
     return jsonify({"result": 'error'})
 
-  # print(user_info)
   # Comment 업데이트 또는 추가
   if type(user_info['Comment']) != None:
     # DB에 comment가 저장돼 있으면 append
