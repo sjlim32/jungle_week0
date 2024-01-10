@@ -2,12 +2,13 @@ from flask import Flask
 
 import re
 
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, url_for
 
 import json
 from bson import ObjectId
 from werkzeug.utils import secure_filename
 import os
+import uuid
 
 from pymongo import MongoClient
 client = MongoClient('localhost', 27017)
@@ -15,7 +16,7 @@ db = client.jungle_week0
 
 app = Flask(__name__)
 
-# ! 사진 업로드 구현
+######### ? 사진 업로드
 
 # * 디렉토리 설정
 UPLOAD_FOLDER = './static/uploads'
@@ -24,11 +25,59 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # * 파일 확장자 정의
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
+########## ? 업로드 된 사진 불러오기
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
 # * 파일 확장자 확인 함수
 def allowed_file(filename):
   return '.' in filename and filename.rsplit('.',1)[1].lower() in ALLOWED_EXTENSIONS
 
-# 메인 페이지
+######### ! 회원가입
+@app.route('/user/feature/signup', methods=['post'])
+def singup():
+  Id = request.form['id']
+  Pw = request.form['pw']
+  PwConf = request.form['pwConf']
+  Name = request.form['name']
+  Nickname = request.form['nickname']
+  Myself = request.form['myself']
+  Img = request.files['img']
+
+  try:
+    len(db.user.find({"Id": Id})) == 0 
+  except:
+    return jsonify({"result": "id_fail"})
+
+  # try:
+  #   pw = db.user.find_one({"Pw": pw_receive})['Pw']
+  # except:
+  #   return jsonify({"result": "pw_fail"})
+
+  if Img and allowed_file(Img.filename):
+    filename = str(uuid.uuid4()) + Name
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename )
+    Img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+  
+  doc ={
+    "Id":Id,
+    "Pw":Pw,
+    "Name":Name,
+    "Nickname":Nickname,
+    "Myself":Myself,
+    "Comment":" ",
+    "Img": {'filename': filename, 'filepath': file_path},
+    "Gkeyword": [{'성실함':0},{'친화적':0},{'꼼꼼함':0},{'끈기있는':0}],
+    "Bkeyword": [{'불성실함':0},{'비판적':0},{'비협조적':0},{'의지가 약한':0}],
+    "Writed": " "
+  }
+  db.user.insert_one(doc)
+  
+  return jsonify({"result": "success"})
+  
+
+######### ! 메인 페이지
 @app.route("/")
 def home():
   return render_template('index.html')
@@ -41,52 +90,9 @@ def logInPage():
 def signUpPage():
   return render_template('signUp.html')
 
+######### ! 메인페이지 (유저목록)
 @app.route("/main/list")
 def mainPage():
-  return render_template('mainPage.html')
-
-@app.route("/user/comment")
-def userPage():
-  return render_template('userPage.html')
-
-@app.route("/user/writing")
-def writePage():
-  return render_template('writing.html')
-
-# ! 회원가입
-@app.route('/user/feature/signup', methods=['post'])
-def singup():
-  Name = request.form['name']
-  Id = request.form['id']
-  Pw = request.form['password']
-  Nickname = request.form['nickname']
-  Myself = request.form['myself']
-  Img = request.files['file']
-
-  if Img and allowed_file(Img.filename):
-    filename = secure_filename(Img.filename)
-    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    Img.save(file_path)
-  
-  doc ={
-    "Name":Name,
-    "Id":Id,
-    "Pw":Pw,
-    "Nickname":Nickname,
-    "Myself":Myself,
-    "Comment":" ",
-    "Img":[{'filename': filename, 'path': file_path}],
-    "Gkeyword": [{'성실함':0},{'친화적':0},{'꼼꼼함':0},{'끈기있는':0}],
-    "Bkeyword": [{'불성실함':0},{'비판적':0},{'비협조적':0},{'의지가 약한':0}],
-    "Writed": " "
-  }
-  db.user.insert_one(doc)
-  
-  return render_template('index.html')
-
-# ! 교육생 목록 
-@app.route('/user/feature/userlist', methods=['get'])
-def user_list():
     searched_data = list(db.user.find({}))
     new_data = []
 
@@ -95,9 +101,24 @@ def user_list():
         new_data.append({"Name": data["Name"], "Gkeyword": gkeywords[:3]})
 
     return render_template('mainPage.html', new_data=new_data)
-# 검색
-@app.route('/user/feature/search', methods=['post'])
-def search():
+
+######### ! 유저페이지 
+@app.route("/user/<user_name>/comment")
+def userPage(user_name):
+  student = db.user.find({"Name": user_name})
+
+  if student:
+    return render_template('userPage.html', student=student)
+  else :
+    return "교육생 정보를 찾을 수 없습니다.", 404
+
+@app.route("/user/writing")
+def writePage():
+  return render_template('writing.html')
+
+######### ! 검색
+@app.route('/main/search', methods=['post'])
+def searchingPage():
     user_name = request.form['name']
     searched_data = list(db.user.find({"Name": user_name}))
     new_data = []
@@ -106,15 +127,14 @@ def search():
         gkeywords = [', '.join(list(d.keys())) for d in data['Gkeyword']]
         new_data.append({"Name": data["Name"], "Gkeyword": gkeywords[:3]})
 
-    return render_template('mainPage.html', new_data=new_data)
-
+    return render_template('mainPage.html', new_data=new_data)      
 
 # # 카테고리 정렬
 # @app.route('/user/feature/listsort', methods=['post'])
 # def listsort():
 #   sorted_user = list(db.users.find({}).sort[('name',-1),('gkeyword',-1)])  
 
-# ! 로그인 페이지에서의 로그인 기능
+######### ! 로그인 페이지에서의 로그인 기능
 @app.route('/user/feature/login', methods=['POST'])
 def ismember():
 

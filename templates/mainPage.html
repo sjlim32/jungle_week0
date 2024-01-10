@@ -90,7 +90,7 @@
     <h1>리스트 목록 보이는 곳</h1>
     <div id="userBox">
       {% for data in new_data %}
-      <li>{{ data.Name }}</li>
+      <li><a href="{{ url_for('userPage', user_name=data['Name']) }}">{{ data['Name'] }}</a></li>
       <ul>
         {% for gkeyword in data.Gkeyword %}
           <li>{{ gkeyword }}</li>

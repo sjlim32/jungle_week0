@@ -140,35 +140,35 @@
 //   var loadedId = sessionStorage.getItem("myId");
 
   // [2-1] "페이지 로딩 후 함수가 실행되게 한다." 
-  $(document).ready(function () { // 페이지 로딩시 영화 정보를 출력하는 함수들을 실행되게 합니다.
-    showInfo()
-  });
+  // $(document).ready(function () { // 페이지 로딩시 영화 정보를 출력하는 함수들을 실행되게 합니다.
+  //   showInfo()
+  // });
 
   // API로부터 교육생 정보 받아오기
-  function showInfo() {
-    // 컨테이너 비우기
-    $('Info_Container').empty()
+  // function showInfo() {
+  //   // 컨테이너 비우기
+  //   $('Info_Container').empty()
 
-    $.ajax({
-      type: "POST",
-      url: "/user/feature/getinfo",
-      data: { 'id_give': loadedId },
-      success: function (response) {
-        if (response['result'] != 'success') {
-          alert("정보를 받아오지 못했습니다.")
-          return
-        }
+  //   $.ajax({
+  //     type: "POST",
+  //     url: "/user/feature/getinfo",
+  //     data: { 'id_give': loadedId },
+  //     success: function (response) {
+  //       if (response['result'] != 'success') {
+  //         alert("정보를 받아오지 못했습니다.")
+  //         return
+  //       }
 
-        // API로부터 받은 response에서 user_info의 키 값으로 교육생 정보 얻기
-        let userInfo = response['user_info']
+  //       // API로부터 받은 response에서 user_info의 키 값으로 교육생 정보 얻기
+  //       let userInfo = response['user_info']
 
-        let name = userInfo['Name']
-        $('#myName').text(name)
-        let mySelf = userInfo['Myself']
-        $('#mySelf').text(mySelf)
-      }
-    })
-  }
+  //       let name = userInfo['Name']
+  //       $('#myName').text(name)
+  //       let mySelf = userInfo['Myself']
+  //       $('#mySelf').text(mySelf)
+  //     }
+  //   })
+  // }
 
 //   // @@@@@@@@@@@@ 5:20 키워드 정렬까지 하다 잠들다. @@@@@@@@@
 //   function keywordSorter() {
@@ -192,12 +192,13 @@
 
 <body>
   <section class="middleSection">
+    {% for info in student %}
     <div id="info_Container">
-      <img class="ImgBox" />
+        <img class="ImgBox" src="{{ url_for('static', filename='/uploads/' + info['Img']['filename']) }}" />
       <span>
         <div class="introduceBox">
-          <h1 id="myName"></h1>
-          <h3 id="mySelf"></h3>
+          <h1 id="myName">{{ info['Name'] }}</h1>
+          <h3 id="mySelf">{{ info['Myself'] }}</h3>
           <div></div>
         </div>
       </span>
@@ -223,6 +224,7 @@
         <div class="comment">항상 웃는 얼굴이라 곁에 있으면 덩달아 즐거워지는 것 같아요!</div>
       </div>
     </div>
+    {% endfor %}
   </section>
 </body>
 
