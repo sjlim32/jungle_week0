@@ -5,12 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>정글 한 줄</title>
 
+    <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
   <style>
-  
     .topSection {
       height: 10rem;
-      background-color: burlywood;
-      border: 1px soild black;
+      padding-top: 1rem;
     }
   
     
@@ -33,7 +34,8 @@
       width: 50%;
       height: auto;
   
-      border: 1px solid black;
+      border-radius: 30px;
+      border: 1px solid lightgray;
     }
   
     .inputBox {
@@ -41,9 +43,9 @@
       width: 30rem;
       height: 3em;
   
-      margin: 1rem;
+      margin-bottom: 2rem;
   
-      border: 1px solid gray;
+      border: 1px solid lavender;
       border-radius: 5px;
     }
   
@@ -53,6 +55,7 @@
   
       font-size:large;
       border-radius: 5px;
+      border: 1px solid lightgray;      
     }
   
     .img_Container {
@@ -61,7 +64,7 @@
   
       margin: 1rem;
   
-      border: 1px solid gray;
+      border: 1px solid lightgray;
       border-radius: 5px;
     }
   
@@ -69,7 +72,7 @@
       width: 10em;
       height: 10em;
   
-      border: 1px solid black;
+      border: 1px solid ;
     }
   
     .button_Container {
@@ -87,7 +90,51 @@
     }
   </style>
 
-<script>  
+<script>
+  // login 데이터(id, pw)를 받아오기.
+  function signUp() {
+    var formData = new FormData();
+
+    // Add form data to the FormData object
+    let dataList = ['id', 'pw', 'pwConf', 'name', 'nickname', 'myself']
+    for (data in dataList) {
+      formData.append(`${data}`, $(`#${data}`).val)
+      
+      if ( data === 0) {
+        alert(data, "가 없습니다.")
+      }
+    }
+    formData.append('id', $("#id").val());
+    formData.append('pw', $("#pw").val());
+    formData.append('pwConf', $("#pwConf").val());
+    formData.append('name', $("#name").val());
+    formData.append('nickname', $("#nickname").val());
+    formData.append('myself', $("#myself").val());
+
+    // Add the image file to the FormData object
+    var fileInput = $('#fileInput')[0];
+    var file = fileInput.files[0];
+    formData.append('img', file);
+
+    $.ajax({
+      type: "POST",
+      url: "/user/feature/signup", 
+      data: formData, // 데이터를 넘겨줌 
+      contentType: false,
+      processData: false,
+      success: function (response) {
+        if (response["result"] == "success") {
+          alert("회원가입을 완료했습니다.");
+          window.location.href = '/main/list';
+        } else if (response["result"] == "id_fail") {
+          alert("중복된 아이디가 존재합니다.")
+        } else {
+          alert("회원가입에 실패했습니다.")
+        }
+      }
+    })
+    }  
+
   function previewFile() {
     var preview = document.getElementById('previewImage');
     var fileInput = document.getElementById('fileInput');
@@ -131,24 +178,28 @@
 </script>
 </head>
 <body>
-  <section class="topSection"></section>
-
+  <section class="topSection">
+    <div class="logo">
+      <a href="/"><img src="../static/logo.png" width="300" height="120"></a>
+    </div>
+  </section>
   <section class="middleSection">
     <form id="form_Container" action="http://localhost:5001/user/feature/signup" method="post" enctype="multipart/form-data">
       <h1 id="Title">회원가입</h1>
-      <input class="inputBox" id="id" name ="id" placeholder="아이디를 입력해주세요." required >
-      <input class="inputBox" type="password" placeholder="비밀번호를 입력해주세요." required>
-      <input class="inputBox" type="password" name="password" placeholder="비밀번호를 한번 더 입력해주세요." required>
-      <input class="inputBox" id="name" name ="name" placeholder="이름을 입력해주세요." required >
+      <input class="inputBox" id="id" placeholder="아이디를 입력해주세요." required >
+      <input class="inputBox" id="pw" type="password" placeholder="비밀번호를 입력해주세요." required>
+      <input class="inputBox" id="pwConf" type="password" placeholder="비밀번호를 한번 더 입력해주세요." required>
+      <input class="inputBox" id="name" placeholder="이름을 입력해주세요." required >
       <input class="inputBox" id="nickname" name= "nickname" placeholder="별명을 입력해주세요." required>
-      <textarea class="textArea" name ="myself"placeholder="자기소개를 작성해주세요." style="resize: none;"></textarea>
+      <textarea class="textArea" id ="myself"placeholder="자기소개를 작성해주세요." style="resize: none;"></textarea>
       <span class="img_Container">
         <img class="imgBox" id="previewImage" src="" alt="non picture" />
-        <input type="file" name="file" id="fileInput" onchange="validateFile()">
+        <input type="file" name="file" id="fileInput" onchange="validateFile()" required>
       </span>
       <span class="button_Container">
-        <button class="button" type="submit" onclick="welcome()">가입</button>
-        <button class="button" type="button" onClick="location.href='/'" >취소</button>
+        <button onclick="signUp()" class="button" type="button" >가입</button>
+        <button class="button" type="button" >취소</button>
+
       </span>
     </form>
   </section>
