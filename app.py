@@ -85,15 +85,30 @@ def singup():
   return render_template('index.html')
 
 # ! 교육생 목록 
-@app.route('/user/feature/list', methods=['get'])
-def list():
-  users_names = list(db.users.find({},{"Name":1,"Gkeyword":1}))
+@app.route('/user/feature/userlist', methods=['get'])
+def user_list():
+    searched_data = list(db.user.find({}))
+    new_data = []
+
+    for data in searched_data:
+        gkeywords = [', '.join(list(d.keys())) for d in data['Gkeyword']]
+        new_data.append({"Name": data["Name"], "Gkeyword": gkeywords[:3]})
+
+    return render_template('mainPage.html', new_data=new_data)
 # 검색
-# @app.route('/user/feature/search', methods=['post'])
-# def search():
-#   user_name = request.form['name']
-#   regex_pattern = re.compile(f".*{user_name}.*")
-#   searched_names = list(db.users.find({"Name":{"$regex": regex_pattern}},{"Name":1,"Gkeyword":1}))
+@app.route('/user/feature/search', methods=['post'])
+def search():
+    user_name = request.form['name']
+    searched_data = list(db.user.find({"Name": user_name}))
+    new_data = []
+
+    for data in searched_data:
+        gkeywords = [', '.join(list(d.keys())) for d in data['Gkeyword']]
+        new_data.append({"Name": data["Name"], "Gkeyword": gkeywords[:3]})
+
+    return render_template('mainPage.html', new_data=new_data)
+
+
 # # 카테고리 정렬
 # @app.route('/user/feature/listsort', methods=['post'])
 # def listsort():
