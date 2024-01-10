@@ -85,10 +85,9 @@
         data: { id_give: id, pw_give: pw }, // 데이터를 넘겨줌 
         success: function (response) { // API로부터 성공적으로 응답을 받는다면,
           if (response["result"] == "success") {
-            alert("로그인 성공!");
+            alert( myId + "님 어서오세요.");
             // 성공시 명단 페이지로 이동하기
-            // @@@@@@@@@@@@@@@ 잠시 /main/list -> /user/comment 로 임시 변경!!@@@@
-            window.location.href = '/user/comment';
+            window.location.href = '/main/list';
           } else if (response["result"] == "id_fail") {
             alert("아이디가 없습니다.")
           } else {

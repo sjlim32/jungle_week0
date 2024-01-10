@@ -136,57 +136,96 @@
   </style>
 </head>
 <script>
-//   // 변수 불러오기(세션 유지용)
-//   var loadedId = sessionStorage.getItem("myId");
+  // 변수 불러오기(사용자 세션 유지용)
+  var loadedId = sessionStorage.getItem("myId");
+  // @@ 선택한 교육생 세션, 수정 예정
+  var loadedPId = sessionStorage.getItem("pickId");
 
   // [2-1] "페이지 로딩 후 함수가 실행되게 한다." 
-  // $(document).ready(function () { // 페이지 로딩시 영화 정보를 출력하는 함수들을 실행되게 합니다.
-  //   showInfo()
-  // });
+  $(document).ready(function () { // 페이지 로딩시 영화 정보를 출력하는 함수들을 실행되게 합니다.
+    showInfo()
+
+    // 내림 차순으로 정렬하는 함수
+    keywordSorter()
+
+    // 한줄평을 DB로부터 받아오는 함수
+    // comments() 
+  });
 
   // API로부터 교육생 정보 받아오기
-  // function showInfo() {
-  //   // 컨테이너 비우기
-  //   $('Info_Container').empty()
+  function showInfo() {
+    // 컨테이너 비우기
+    $('Info_Container').empty()
 
-  //   $.ajax({
-  //     type: "POST",
-  //     url: "/user/feature/getinfo",
-  //     data: { 'id_give': loadedId },
-  //     success: function (response) {
-  //       if (response['result'] != 'success') {
-  //         alert("정보를 받아오지 못했습니다.")
-  //         return
-  //       }
+    $.ajax({
+      type: "POST",
+      url: "/user/feature/getinfo",
+      // 명단에서 클릭한 사람으로 바꿔야
+      data: { 'pid_give': loadedPId },
+      success: function (response) {
+        if (response['result'] != 'success') {
+          alert("정보를 받아오지 못했습니다.")
+          return
+        }
 
-  //       // API로부터 받은 response에서 user_info의 키 값으로 교육생 정보 얻기
-  //       let userInfo = response['user_info']
+        // API로부터 받은 response에서 user_info의 키 값으로 교육생 정보 얻기
+        let userInfo = response['user_info']
 
-  //       let name = userInfo['Name']
-  //       $('#myName').text(name)
-  //       let mySelf = userInfo['Myself']
-  //       $('#mySelf').text(mySelf)
-  //     }
-  //   })
-  // }
+        let name = userInfo['Name']
+        $('#myName').text(name)
+        let mySelf = userInfo['Myself']
+        $('#mySelf').text(mySelf)
 
-//   // @@@@@@@@@@@@ 5:20 키워드 정렬까지 하다 잠들다. @@@@@@@@@
-//   function keywordSorter() {
-//     $('Info_Container').empty()
+      }
+    })
+  }
+  function keywordSorter() {
+    $('Info_Container').empty()
 
-//     $.ajax({
-//       type: "GET",
-//       url: "/user/feature/getinfo",
-//       data: { 'id_give': loadedId },
-//       success: function (response) {
-//         if (response['result'] != 'success') {
-//           alert("정보를 받아오지 못했습니다.")
-//           return
-//         }
-//       }       
-//     })
-//   }
+    $.ajax({
+      type: "POST",
+      url: "/user/feature/getkey",
+      // 명단에서 클릭한 사람으로 바꿔야
+      data: { 'pid_give': loadedPId },
+      success: function (response) {
+        if (response['result'] != 'success') {
+          alert("정보를 받아오지 못했습니다.")
+          return
+        }
+        let GKey = response['GKey']
+        let BKey = response['BKey']
+        let Nick = response['Nickname']
+        let Comments = response['Comment']
 
+        addKeyword(GKey, BKey, Nick, Comments)
+      }
+    })
+
+    function addKeyword(GKey, BKey, Nick, Comments) {
+      for (let i = 0; i < GKey.length; i++) {
+        let GKeyValue = Object.keys(GKey[i]).join(", "); // GPT
+
+        $('#Gkey-list').append(`
+            <span class="G_keyword">${GKeyValue}</span>
+        `);
+      }
+      let BKeyValue = Object.keys(BKey[0]).join(", ");
+
+      $('#Bkey-list').append(`
+            <span class="B_keyword">${BKeyValue}</span>
+        `);
+    }
+
+    // @@ Comments 등록하기 전까지는 예외처리 @@
+    // for (let i = 0; i < Comments.length; i++) {
+    //   let Comment = Object.values(Comments[i]).join(", "); // GPT
+
+    //   $('#Comment-list').append(`
+    //       <div class="nickname">${Nick}</div>
+    //       <div class="comment">${Comment}</div>
+    //     `);
+    // }
+  }
 
 // </script>
 
@@ -206,22 +245,17 @@
     <button class="button" type="button" onclick="location.href='/user/writing'">등록하러 가기</button>
     <div id="keyword_Container">
       <h1 style="padding-left: 2rem;">키워드</h1>
-      <div class="keywordBox">
-        <div class="G_keyword">성실함</div>
-        <div class="G_keyword">열정적임</div>
-        <div class="G_keyword">친절함</div>
+      <div class="keywordBox" id="Gkey-list">
+
       </div>
-      <div class="keywordBox">
-        <span class="B_keyword">게으름</span>
-        <span class="B_keyword">성급함</span>
-        <span class="B_keyword">지각쟁이</span>
+      <div class="keywordBox" id="Bkey-list">
+
       </div>
     </div>
     <div id="comment_Container">
       <h1 style="padding-left: 2rem;">한줄평</h1>
-      <div class="commentBox">
-        <div class="nickname">라이언일병</div>
-        <div class="comment">항상 웃는 얼굴이라 곁에 있으면 덩달아 즐거워지는 것 같아요!</div>
+      <div class="commentBox" id="Comment-list">
+
       </div>
     </div>
     {% endfor %}
