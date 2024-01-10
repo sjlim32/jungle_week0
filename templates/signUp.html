@@ -9,11 +9,9 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
   <style>
-  
     .topSection {
       height: 10rem;
-      background-color: burlywood;
-      border: 1px soild black;
+      padding-top: 1rem;
     }
   
     
@@ -36,7 +34,8 @@
       width: 50%;
       height: auto;
   
-      border: 1px solid black;
+      border-radius: 30px;
+      border: 1px solid lightgray;
     }
   
     .inputBox {
@@ -44,9 +43,9 @@
       width: 30rem;
       height: 3em;
   
-      margin: 1rem;
+      margin-bottom: 2rem;
   
-      border: 1px solid gray;
+      border: 1px solid lavender;
       border-radius: 5px;
     }
   
@@ -56,6 +55,7 @@
   
       font-size:large;
       border-radius: 5px;
+      border: 1px solid lightgray;      
     }
   
     .img_Container {
@@ -64,7 +64,7 @@
   
       margin: 1rem;
   
-      border: 1px solid gray;
+      border: 1px solid lightgray;
       border-radius: 5px;
     }
   
@@ -72,7 +72,7 @@
       width: 10em;
       height: 10em;
   
-      border: 1px solid black;
+      border: 1px solid ;
     }
   
     .button_Container {
@@ -178,8 +178,11 @@
 </script>
 </head>
 <body>
-  <section class="topSection"></section>
-
+  <section class="topSection">
+    <div class="logo">
+      <a href="/"><img src="../static/logo.png" width="300" height="120"></a>
+    </div>
+  </section>
   <section class="middleSection">
     <form id="form_Container" action="http://localhost:5001/user/feature/signup" method="post" enctype="multipart/form-data">
       <h1 id="Title">회원가입</h1>
