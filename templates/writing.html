@@ -137,11 +137,10 @@
     // Ajax로 서버로 데이터 전송
     function sendData() {
       var comment = $("#inputComment").val();
-
       $.ajax({
         type: "POST",
         url: "/user/feature/getdata",
-        data: {'pid_give': loadedPId, 'comment_give': comment,
+        data: {'id_give': loadedId, 'pid_give': loadedPId, 'comment_give': comment,
         'selectedGKey': JSON.stringify(selectedGKey),
         'selectedBKey': JSON.stringify(selectedBKey)
         // ajax에서 API로 배열을 넘기기 위해 문자열로 변환한다.
