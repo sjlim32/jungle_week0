@@ -179,7 +179,6 @@
       }
     })
   }
-
   function keywordSorter() {
     $('Info_Container').empty()
 
@@ -249,12 +248,13 @@
 
 <body>
   <section class="middleSection">
+    {% for info in student %}
     <div id="info_Container">
-      <img class="ImgBox" />
+        <img class="ImgBox" src="{{ url_for('static', filename='/uploads/' + info['Img']['filename']) }}" />
       <span>
         <div class="introduceBox">
-          <h1 id="myName"></h1>
-          <h3 id="mySelf"></h3>
+          <h1 id="myName">{{ info['Name'] }}</h1>
+          <h3 id="mySelf">{{ info['Myself'] }}</h3>
           <div></div>
         </div>
       </span>
@@ -275,6 +275,7 @@
 
       </div>
     </div>
+    {% endfor %}
   </section>
 </body>
 

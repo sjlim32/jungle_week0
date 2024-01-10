@@ -1,10 +1,4 @@
-from flask import Flask
-
-import re
-
-from flask import Flask, render_template, request, jsonify
-
-import json
+from flask import Flask, render_template, request, jsonify, url_for
 from bson import ObjectId
 from werkzeug.utils import secure_filename
 import os
@@ -12,29 +6,80 @@ import os
 from jinja2 import Template
 
 from pymongo import MongoClient
-client = MongoClient('localhost', 27017)
-db = client.jungle_week0
+
+from routes import getInfo_bp, logIn_bp, main_bp
+
+import re, json, os, uuid
 
 app = Flask(__name__)
 
-# 회원가입
+# * DB 연결
+client = MongoClient('localhost', 27017)
+db = client.jungle_week0
+
+# * Blueprint 설정
+app.register_blueprint(getInfo_bp)
+app.register_blueprint(logIn_bp)
+app.register_blueprint(main_bp)
+
+# ! Router
+@app.route("/")
+def home():
+  return render_template('index.html')  
+
+@app.route("/user/<user_name>/comment")
+def userPage(user_name):
+  student = db.user.find({"Name": user_name})
+
+  if student:
+    return render_template('userPage.html', student=student)
+  else :
+    return "교육생 정보를 찾을 수 없습니다.", 404
+
+@app.route("/user/signup")
+def signUpPage():
+  return render_template('signUp.html')
+
+@app.route("/user/writing")
+def writePage():
+  return render_template('writing.html')  
+
+# ! API
+
+# ? 회원가입
 @app.route('/user/feature/signup', methods=['post'])
 def singup():
-  Name = request.form['name']
   Id = request.form['id']
-  Pw = request.form['password']
+  Pw = request.form['pw']
+  PwConf = request.form['pwConf']
+  Name = request.form['name']
   Nickname = request.form['nickname']
   Myself = request.form['myself']
-  Img = request.files['file']
+  Img = request.files['img']
+
+  # try:
+  #   len(db.user.find({"Id": Id})) == 0 
+  # except:
+  #   return jsonify({"result": "id_fail"})
+
+  # try:
+  #   pw = db.user.find_one({"Pw": pw_receive})['Pw']
+  # except:
+  #   return jsonify({"result": "pw_fail"})
+
+  if Img and allowed_file(Img.filename):
+    filename = str(uuid.uuid4()) + Name
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename )
+    Img.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
   
   doc ={
-    "Name":Name,
     "Id":Id,
     "Pw":Pw,
+    "Name":Name,
     "Nickname":Nickname,
     "Myself":Myself,
-    "Comment":" ",
-    "Img":" ",
+    "Comment":["gg","kk"],
+    "Img":{'filename': filename, 'path': file_path},
     "Gkeyword": [{'성실함':0},{'친화적':0},{'꼼꼼함':0},{'끈기있는':0}],
     "Bkeyword": [{'불성실함':0},{'비판적':0},{'비협조적':0},{'의지가 약한':0}],
     "Writed": " "
@@ -42,50 +87,7 @@ def singup():
   db.user.insert_one(doc)
   
   return render_template('index.html')
-# 교육생 목록 
-@app.route('/user/feature/list', methods=['get'])
-def list():
-  users_names = list(db.users.find({},{"Name":1,"Gkeyword":1}))
 
-# 메인 페이지
-@app.route("/")
-def home():
-  return render_template('index.html')
-
-# 로그인 페이지에서의 로그인 기능
-@app.route('/user/feature/login', methods=['POST'])
-def ismember():
-
-  # 클라이언트로부터 데이터를 받기
-  id_receive = request.form['id_give']
-  pw_receive = request.form['pw_give']
-  
-  # 클라이언트로부터 받은 데이터와 DB의 데이터가 불일치할시, "NoneType" 객체 반환하는 것을 방지하기 위해 try문 작성
-  try:
-    id = db.user.find_one({"Id": id_receive})['Id']
-  except:
-    return jsonify({"result": "id_fail"})
-  
-  try:
-    pw = db.user.find_one({"Pw": pw_receive})['Pw']
-  except:
-    return jsonify({"result": "pw_fail"})
-  
-  return jsonify({"result": "success"})
-
-# 작성하고 아래로 옮기자
-# 교육생의 정보를 제공하는 API
-@app.route('/user/feature/getinfo', methods=['POST'])
-def getInfo():
-  
-  pid_receive = request.form["pid_give"]
-  info = db.user.find_one({"Id": pid_receive})
-  
-  # JSON 형식 중 ObjectId는 BSON 타입이라 ajax에 반환될 때 직렬화해주어야 한다.
-  if info:
-    info["_id"] = str(info["_id"])
-
-  return jsonify({"result": "success", "user_info": info})
 
 # 교육생의 장단점 키워드를 정렬
 @app.route('/user/feature/getkey', methods=['POST'])
@@ -164,26 +166,22 @@ def getData():
 
   return jsonify({"result": "success"}) 
 
+# ? 사진 업로드
+# * 디렉토리 설정
+UPLOAD_FOLDER = './static/uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-@app.route("/user/login")
-def logInPage():
-  return render_template('logIn.html')
+# * 파일 확장자 정의
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
-@app.route("/user/signup")
-def signUpPage():
-  return render_template('signUp.html')
+# * 파일 확장자 확인 함수
+def allowed_file(filename):
+  return '.' in filename and filename.rsplit('.',1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route("/main/list")
-def mainPage():
-  return render_template('mainPage.html')
-
-@app.route("/user/comment")
-def userPage():
-  return render_template('userPage.html')
-
-@app.route("/user/writing")
-def writePage():
-  return render_template('writing.html')
+# * 사진 불러오기
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 # ! Mac 환경에선 port 번호 5001, 배포 시에는 5000으로 수정
 if __name__ == "__main__":
