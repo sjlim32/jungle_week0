@@ -39,7 +39,8 @@
       width: 50%;
       height: auto;
 
-      border: 1px solid black;
+      border: 1px solid lightgray;
+      border-radius: 20px;
     }
 
     .inputBox {
@@ -49,22 +50,27 @@
 
       margin: 1rem;
 
-      border: 1px solid gray;
-      border-radius: 5px;
+      border: 1px solid lavender;
+      border-radius: 10px;
     }
 
     .button_Container {
       display: flex;
       justify-content: center;
 
-      width: 20rem;
-      margin: 1rem;
-
-      border: 1px solid black;
+      width: 40rem;
+      margin: 3rem;
     }
 
     .button {
-      margin: 1rem;
+      font-size: larger;
+      width: 10rem;
+      height: 2rem;
+      margin: 0 3rem;
+
+      color: white;
+      background-color: darkgreen;
+      border-radius: 30px;  
     }
   </style>
 
@@ -74,24 +80,24 @@
       let id = $("#id").val()
       let pw = $("#password").val()
 
-      // 변수 저장하기(세션 유지용)
-      var myId = id
-      sessionStorage.setItem("myId", myId)
-
-      // postInfo에 POST 방식으로 메모 생성 요청하기
       $.ajax({
-        type: "POST", // POST 방식으로 요청
-        url: "/user/feature/login", // user/feature/login 이라는 url에 요청
-        data: { id_give: id, pw_give: pw }, // 데이터를 넘겨줌 
-        success: function (response) { // API로부터 성공적으로 응답을 받는다면,
+        type: "POST",
+        url: "/user/feature/login",
+        contentType: "application/json",
+        data: JSON.stringify({id: id, pw: pw}),
+        success: function (response) {
           if (response["result"] == "success") {
-            alert( myId + "님 어서오세요.");
-            // 성공시 명단 페이지로 이동하기
+            alert('로그인 성공!')
+            var token = response.token;
+            sessionStorage.setItem('jwttoken', token);
+            sessionStorage.setItem('name', response.user);
             window.location.href = '/main/list';
           } else if (response["result"] == "id_fail") {
-            alert("아이디가 없습니다.")
+            alert("아이디가 틀렸습니다.")
+            window.location.href = '/user/login';
           } else {
-            alert("비밀번호가 맞지 않습니다.")
+            alert("비밀번호가 틀렸습니다.")
+            window.location.href = '/user/login';
           }
         }
       })

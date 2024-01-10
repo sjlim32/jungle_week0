@@ -49,23 +49,16 @@ def writePage():
 # ? 회원가입
 @app.route('/user/feature/signup', methods=['post'])
 def singup():
-  Id = request.form['id']
-  Pw = request.form['pw']
-  PwConf = request.form['pwConf']
-  Name = request.form['name']
-  Nickname = request.form['nickname']
-  Myself = request.form['myself']
-  Img = request.files['img']
-
-  # try:
-  #   len(db.user.find({"Id": Id})) == 0 
-  # except:
-  #   return jsonify({"result": "id_fail"})
-
-  # try:
-  #   pw = db.user.find_one({"Pw": pw_receive})['Pw']
-  # except:
-  #   return jsonify({"result": "pw_fail"})
+  try:
+    Id = request.form['id']
+    Pw = request.form['pw']
+    PwConf = request.form['pwConf']
+    Name = request.form['name']
+    Nickname = request.form['nickname']
+    Myself = request.form['myself']
+    Img = request.files['img']
+  except:
+    return jsonify({"result": "fail"})
 
   if Img and allowed_file(Img.filename):
     filename = str(uuid.uuid4()) + Name
@@ -80,9 +73,13 @@ def singup():
     "Myself":Myself,
     "Comment":[],
     "Img":{'filename': filename, 'path': file_path},
-    "Gkeyword": [{'성실함':0},{'친화적':0},{'꼼꼼함':0},{'끈기있는':0}],
-    "Bkeyword": [{'불성실함':0},{'비판적':0},{'비협조적':0},{'의지가 약한':0}],
-    "Writed": [Id]
+    "Gkeyword": [{'성실함':0},{'친화적':0},{'꼼꼼함':0},{'끈기있는':0},
+                 {'수용적인':0},{'현명한':0},{'상상력 풍부한':0},{'책임감 있는':0},
+                 {'계획적인':0},{'전문적인':0}],
+    "Bkeyword": [{'불성실함':0},{'비판적':0},{'비협조적':0},
+                 {'의지가 약한':0},{'이기적인':0},{'민감한':0},{'화가 많은':0},
+                 {'고집쎈':0},{'수동적':0},{''}],
+    "Writed": " "
   }
   db.user.insert_one(doc)
   
