@@ -49,23 +49,16 @@ def writePage():
 # ? 회원가입
 @app.route('/user/feature/signup', methods=['post'])
 def singup():
-  Id = request.form['id']
-  Pw = request.form['pw']
-  PwConf = request.form['pwConf']
-  Name = request.form['name']
-  Nickname = request.form['nickname']
-  Myself = request.form['myself']
-  Img = request.files['img']
-
-  # try:
-  #   len(db.user.find({"Id": Id})) == 0 
-  # except:
-  #   return jsonify({"result": "id_fail"})
-
-  # try:
-  #   pw = db.user.find_one({"Pw": pw_receive})['Pw']
-  # except:
-  #   return jsonify({"result": "pw_fail"})
+  try:
+    Id = request.form['id']
+    Pw = request.form['pw']
+    PwConf = request.form['pwConf']
+    Name = request.form['name']
+    Nickname = request.form['nickname']
+    Myself = request.form['myself']
+    Img = request.files['img']
+  except:
+    return jsonify({"result": "fail"})
 
   if Img and allowed_file(Img.filename):
     filename = str(uuid.uuid4()) + Name
