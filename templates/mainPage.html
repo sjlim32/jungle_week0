@@ -64,10 +64,10 @@
     }
 
     .button {
-      
+
       width: 5rem;
       height: 3rem;
-      
+
       background-color: white;
       border-radius: 20px;
       border: 1px solid lightgrey;
@@ -132,15 +132,17 @@
       border: 3px solid crimson;
       border-radius: 10px;
     }
-
   </style>
 
   <script>
-    // @@ 선택된 교육생 세션 유지용, 일단 스트링으로 표현, merge 후 수정 예정 @@
-    var pickId = "k"
-    sessionStorage.setItem("pickId", pickId)
+    // 선택된 교육생 세션
+    function setPickName(name) {
+      sessionStorage.setItem("pName", name);
+      return name
+    }
     // 아래는 로그인한 사용자 세션
     var loadedId = sessionStorage.getItem("myId");
+    var loadedName = sessionStorage.getItem("pName");
 
   </script>
 </head>
@@ -153,29 +155,31 @@
   </section>
   <section class="middleSection">
     <form id="search_Container" action="/main/search" method="post">
-        <input class="inputBox" placeholder="검색할 이름을 입력해주세요." name="name">
-        <button class="button" type="submit">검색</button>
+      <input class="inputBox" placeholder="검색할 이름을 입력해주세요." name="name">
+      <button class="button" type="submit">검색</button>
     </form>
     <div id="sort_Container">
       <h3>정렬 방식</h3>
       <form action="/main/namesort" method="post">
-      <button class="sorter" type="submit" >가나다 순으로</button>
+        <button class="sorter" type="submit">가나다 순으로</button>
       </form>
       <form action="/main/commentsort" method="post">
-      <button class="sorter" type="submit" >키워드 많은 순으로</button>
+        <button class="sorter" type="submit">키워드 많은 순으로</button>
       </form>
-      
+
     </div>
   </section>
   <section class="listSection">
     {% for data in new_data %}
     <div class="infoContainer">
       <img class="imgBox" src="{{ url_for('static', filename='/uploads/' + data['Img']['filename']) }}" />
-      <div class="name"><a style="font-size: xx-large; text-decoration-line: none; color: black;"href="{{ url_for('userPage', user_name=data['Name']) }}"/>{{ data['Name'] }}</div>
+      <div class="name"><a style="font-size: xx-large; text-decoration-line: none; color: black;"
+          href="{{ url_for('userPage', user_name=data['Name']) }}" onclick="setPickName('{{ data['Name'] }}')">
+          {{ data['Name'] }}</a></div>
       {% for gkeyword in data.Gkeyword %}
-          <div class="keyword">{{ gkeyword }}</div>
-        {% endfor %}
-    </div>    
+      <div class="keyword">{{ gkeyword }}</div>
+      {% endfor %}
+    </div>
     {% endfor %}
   </section>
 </body>

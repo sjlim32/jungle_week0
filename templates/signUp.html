@@ -95,15 +95,7 @@
   function signUp() {
     var formData = new FormData();
 
-    // Add form data to the FormData object
-    let dataList = ['id', 'pw', 'pwConf', 'name', 'nickname', 'myself']
-    for (data in dataList) {
-      formData.append(`${data}`, $(`#${data}`).val)
-      
-      if ( data === 0) {
-        alert(data, "가 없습니다.")
-      }
-    }
+
     formData.append('id', $("#id").val());
     formData.append('pw', $("#pw").val());
     formData.append('pwConf', $("#pwConf").val());

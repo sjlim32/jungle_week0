@@ -136,13 +136,12 @@
   </style>
 </head>
 <script>
-  // 변수 불러오기(사용자 세션 유지용)
+  // 아래는 로그인한 사용자 세션
   var loadedId = sessionStorage.getItem("myId");
-  // @@ 선택한 교육생 세션, 수정 예정
-  var loadedPId = sessionStorage.getItem("pickId");
+  var loadedName = sessionStorage.getItem("pName");
 
-  // [2-1] "페이지 로딩 후 함수가 실행되게 한다." 
-  $(document).ready(function () { // 페이지 로딩시 영화 정보를 출력하는 함수들을 실행되게 합니다.
+  // 페이지 로딩 후 함수가 실행 
+  $(document).ready(function () {
     showInfo()
 
     // 내림 차순으로 정렬하는 함수
@@ -160,25 +159,23 @@
     $.ajax({
       type: "POST",
       url: "/user/feature/getinfo",
-      // 명단에서 클릭한 사람으로 바꿔야
-      data: { 'pid_give': loadedPId },
+      data: { 'pname_give': loadedName },
       success: function (response) {
         if (response['result'] != 'success') {
           alert("정보를 받아오지 못했습니다.")
           return
         }
-
         // API로부터 받은 response에서 user_info의 키 값으로 교육생 정보 얻기
         let userInfo = response['user_info']
-
+        console.log(userInfo)
         let name = userInfo['Name']
         $('#myName').text(name)
         let mySelf = userInfo['Myself']
         $('#mySelf').text(mySelf)
-
       }
     })
   }
+
   function keywordSorter() {
     $('Info_Container').empty()
 
@@ -186,7 +183,7 @@
       type: "POST",
       url: "/user/feature/getkey",
       // 명단에서 클릭한 사람으로 바꿔야
-      data: { 'pid_give': loadedPId },
+      data: { 'pname_give': loadedName },
       success: function (response) {
         if (response['result'] != 'success') {
           alert("정보를 받아오지 못했습니다.")
@@ -199,7 +196,8 @@
         let IsShow = response['IsShow']
         let IsWrited = response['IsWrited']
 
-        if (loadedId == loadedPId && IsShow >= 10) {
+        // 부정 키워드는 자기 자신만 보기
+        if (loadedId == loadedName && IsShow >= 10) {
           $('#Bkey-list').css('display', 'flex');
         } else {
           $('#Bkey-list').css('display', 'none');
@@ -208,7 +206,6 @@
         addKeyword(GKey, BKey, Comments, IsWrited)
       }
     })
-
 
     function addKeyword(GKey, BKey, Comments, IsWrited) {
       for (let i = 0; i < GKey.length; i++) {
@@ -225,21 +222,20 @@
         `);
 
       for (let i = 0; i < Comments.length; i++) {
-        let Comment = Object.values(Comments[i]).join(", "); // GPT
+        let Comment = Object.values(Comments[i]).join('') // GPT
         $('#Comment-list').append(`
           <div class="comment">${Comment}</div>
         `);
-
-        if (IsWrited.includes(loadedId)) {
-          $('#Bkey-list').css('display', 'flex');
-          $('#Gkey-list').css('display', 'flex');
-          $('#Comment-list').css('display', 'flex');
-        } else {
-          $('#Bkey-list').css('display', 'none');
-          $('#Gkey-list').css('display', 'none');
-          $('#Comment-list').css('display', 'none');
-
-        }
+      }
+      console.log(IsWrited)
+      if (IsWrited.includes(loadedId)) {
+        $('#Bkey-list').css('display', 'flex');
+        $('#Gkey-list').css('display', 'flex');
+        $('#Comment-list').css('display', 'flex');
+      } else {
+        $('#Bkey-list').css('display', 'none');
+        $('#Gkey-list').css('display', 'none');
+        $('#Comment-list').css('display', 'none');
       }
     }
   }
@@ -250,7 +246,7 @@
   <section class="middleSection">
     {% for info in student %}
     <div id="info_Container">
-        <img class="ImgBox" src="{{ url_for('static', filename='/uploads/' + info['Img']['filename']) }}" />
+      <img class="ImgBox" src="{{ url_for('static', filename='/uploads/' + info['Img']['filename']) }}" />
       <span>
         <div class="introduceBox">
           <h1 id="myName">{{ info['Name'] }}</h1>

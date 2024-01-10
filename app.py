@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, url_for
+from flask import Flask, render_template, request, jsonify, send_from_directory, url_for
 from bson import ObjectId
 from werkzeug.utils import secure_filename
 import os
@@ -78,11 +78,11 @@ def singup():
     "Name":Name,
     "Nickname":Nickname,
     "Myself":Myself,
-    "Comment":["gg","kk"],
+    "Comment":[],
     "Img":{'filename': filename, 'path': file_path},
     "Gkeyword": [{'성실함':0},{'친화적':0},{'꼼꼼함':0},{'끈기있는':0}],
     "Bkeyword": [{'불성실함':0},{'비판적':0},{'비협조적':0},{'의지가 약한':0}],
-    "Writed": " "
+    "Writed": [Id]
   }
   db.user.insert_one(doc)
   
