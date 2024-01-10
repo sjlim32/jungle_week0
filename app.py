@@ -6,6 +6,8 @@ from flask import Flask, render_template, request, jsonify
 
 import json
 from bson import ObjectId
+from werkzeug.utils import secure_filename
+import os
 
 from pymongo import MongoClient
 client = MongoClient('localhost', 27017)
@@ -13,7 +15,45 @@ db = client.jungle_week0
 
 app = Flask(__name__)
 
-# 회원가입
+# ! 사진 업로드 구현
+
+# * 디렉토리 설정
+UPLOAD_FOLDER = './static/uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# * 파일 확장자 정의
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+# * 파일 확장자 확인 함수
+def allowed_file(filename):
+  return '.' in filename and filename.rsplit('.',1)[1].lower() in ALLOWED_EXTENSIONS
+
+# 메인 페이지
+@app.route("/")
+def home():
+  return render_template('index.html')
+
+@app.route("/user/login")
+def logInPage():
+  return render_template('logIn.html')
+
+@app.route("/user/signup")
+def signUpPage():
+  return render_template('signUp.html')
+
+@app.route("/main/list")
+def mainPage():
+  return render_template('mainPage.html')
+
+@app.route("/user/comment")
+def userPage():
+  return render_template('userPage.html')
+
+@app.route("/user/writing")
+def writePage():
+  return render_template('writing.html')
+
+# ! 회원가입
 @app.route('/user/feature/signup', methods=['post'])
 def singup():
   Name = request.form['name']
@@ -22,6 +62,11 @@ def singup():
   Nickname = request.form['nickname']
   Myself = request.form['myself']
   Img = request.files['file']
+
+  if Img and allowed_file(Img.filename):
+    filename = secure_filename(Img.filename)
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    Img.save(file_path)
   
   doc ={
     "Name":Name,
@@ -30,7 +75,7 @@ def singup():
     "Nickname":Nickname,
     "Myself":Myself,
     "Comment":" ",
-    "Img":" ",
+    "Img":[{'filename': filename, 'path': file_path}],
     "Gkeyword": [{'성실함':0},{'친화적':0},{'꼼꼼함':0},{'끈기있는':0}],
     "Bkeyword": [{'불성실함':0},{'비판적':0},{'비협조적':0},{'의지가 약한':0}],
     "Writed": " "
@@ -38,7 +83,8 @@ def singup():
   db.user.insert_one(doc)
   
   return render_template('index.html')
-# 교육생 목록 
+
+# ! 교육생 목록 
 @app.route('/user/feature/list', methods=['get'])
 def list():
   users_names = list(db.users.find({},{"Name":1,"Gkeyword":1}))
@@ -51,14 +97,9 @@ def list():
 # # 카테고리 정렬
 # @app.route('/user/feature/listsort', methods=['post'])
 # def listsort():
-#   sorted_user = list(db.users.find({}).sort[('name',-1),('gkeyword',-1)])
+#   sorted_user = list(db.users.find({}).sort[('name',-1),('gkeyword',-1)])  
 
-# 메인 페이지
-@app.route("/")
-def home():
-  return render_template('index.html')
-
-# 로그인 페이지에서의 로그인 기능
+# ! 로그인 페이지에서의 로그인 기능
 @app.route('/user/feature/login', methods=['POST'])
 def ismember():
 
@@ -80,36 +121,16 @@ def ismember():
   return jsonify({"result": "success"})
 
 # 작성하고 아래로 옮기자
-@app.route('/user/feature/getinfo', methods=['POST'])
-def getInfo():
+# @app.route('/user/feature/getinfo', methods=['POST'])
+# def getInfo():
   
-  id_receive = request.form["id_give"]
-  info = db.user.find_one({"Id": id_receive})
+#   id_receive = request.form["id_give"]
+#   info = db.user.find_one({"Id": id_receive})
   
-  if info:
-    info["_id"] = str(info["_id"])
+#   if info:
+#     info["_id"] = str(info["_id"])
 
-  return jsonify({"result": "success", "user_info": info})
-
-@app.route("/user/login")
-def logInPage():
-  return render_template('logIn.html')
-
-@app.route("/user/signup")
-def signUpPage():
-  return render_template('signUp.html')
-
-@app.route("/main/list")
-def mainPage():
-  return render_template('mainPage.html')
-
-@app.route("/user/comment")
-def userPage():
-  return render_template('userPage.html')
-
-@app.route("/user/writing")
-def writePage():
-  return render_template('writing.html')
+#   return jsonify({"result": "success", "user_info": info})
 
 # ! Mac 환경에선 port 번호 5001, 배포 시에는 5000으로 수정
 if __name__ == "__main__":

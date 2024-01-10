@@ -136,19 +136,12 @@
   </style>
 </head>
 <script>
-  // 변수 불러오기(세션 유지용)
-  var loadedId = sessionStorage.getItem("myId");
+//   // 변수 불러오기(세션 유지용)
+//   var loadedId = sessionStorage.getItem("myId");
 
   // [2-1] "페이지 로딩 후 함수가 실행되게 한다." 
   $(document).ready(function () { // 페이지 로딩시 영화 정보를 출력하는 함수들을 실행되게 합니다.
-
-    // 유저 정보를 API로부터 받아오는 함수
     showInfo()
-
-    // 내림 차순으로 정렬하는 함수
-    keywordSorter()
-
-    // displayTrashMode() // trash으 값에 따라 메뉴를 바꿔줍니다.
   });
 
   // API로부터 교육생 정보 받아오기
@@ -177,25 +170,25 @@
     })
   }
 
-  // @@@@@@@@@@@@ 5:20 키워드 정렬까지 하다 잠들다. @@@@@@@@@
-  function keywordSorter() {
-    $('Info_Container').empty()
+//   // @@@@@@@@@@@@ 5:20 키워드 정렬까지 하다 잠들다. @@@@@@@@@
+//   function keywordSorter() {
+//     $('Info_Container').empty()
 
-    $.ajax({
-      type: "GET",
-      url: "/user/feature/getinfo",
-      data: { 'id_give': loadedId },
-      success: function (response) {
-        if (response['result'] != 'success') {
-          alert("정보를 받아오지 못했습니다.")
-          return
-        }
-      }       
-    })
-  }
+//     $.ajax({
+//       type: "GET",
+//       url: "/user/feature/getinfo",
+//       data: { 'id_give': loadedId },
+//       success: function (response) {
+//         if (response['result'] != 'success') {
+//           alert("정보를 받아오지 못했습니다.")
+//           return
+//         }
+//       }       
+//     })
+//   }
 
 
-</script>
+// </script>
 
 <body>
   <section class="middleSection">
