@@ -88,7 +88,6 @@ def singup():
   
   return render_template('index.html')
 
-
 # 교육생의 장단점 키워드를 정렬
 @app.route('/user/feature/getkey', methods=['POST'])
 def getKey():
@@ -178,6 +177,130 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 def allowed_file(filename):
   return '.' in filename and filename.rsplit('.',1)[1].lower() in ALLOWED_EXTENSIONS
 
+# @app.route("/main/list")
+# def mainPage():
+#   return render_template('mainPage.html')
+
+@app.route("/user/comment")
+def userPage():
+  return render_template('userPage.html')
+
+@app.route("/user/writing")
+def writePage():
+  return render_template('writing.html')
+
+# ! 회원가입
+@app.route('/user/feature/signup', methods=['post'])
+def singup():
+  Name = request.form['name']
+  Id = request.form['id']
+  Pw = request.form['password']
+  Nickname = request.form['nickname']
+  Myself = request.form['myself']
+  Img = request.files['file']
+
+  if Img and allowed_file(Img.filename):
+    filename = secure_filename(Img.filename)
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    Img.save(file_path)
+  
+  doc ={
+    "Name":Name,
+    "Id":Id,
+    "Pw":Pw,
+    "Nickname":Nickname,
+    "Myself":Myself,
+    "Comment":[ ],
+    "Img":[{'filename': filename, 'path': file_path}],
+    "Gkeyword": [{'성실함':0},{'친화적':0},{'꼼꼼함':0},{'끈기있는':0}],
+    "Bkeyword": [{'불성실함':0},{'비판적':0},{'비협조적':0},{'의지가 약한':0}],
+    "Writed": " "
+  }
+  db.user.insert_one(doc)
+  
+  return render_template('index.html')
+
+# ! 교육생 목록 
+@app.route('/main/list', methods=['get'])
+def user_list():
+    searched_data = list(db.user.find({}))
+    new_data = []
+
+    for data in searched_data:
+        gkeywords = [', '.join(list(d.keys())) for d in sorted(data['Gkeyword'], key=lambda x: list(x.values())[0], reverse=True)]
+        new_data.append({"Name": data["Name"], "Gkeyword": gkeywords[:3]})
+
+    return render_template('mainPage.html', new_data=new_data)
+# 검색
+@app.route('/user/feature/search', methods=['post'])
+def search():
+    user_name = request.form['name']
+    searched_data = list(db.user.find({"Name": user_name}))
+    new_data = []
+
+    for data in searched_data:
+      gkeywords = [', '.join(list(d.keys())) for d in sorted(data['Gkeyword'], key=lambda x: list(x.values())[0], reverse=True)]
+      new_data.append({"Name": data["Name"], "Gkeyword": gkeywords[:3]})
+
+    return render_template('mainPage.html', new_data=new_data)
+
+
+# 카테고리 정렬: 가나다순
+@app.route('/user/feature/listsort1', methods=['post'])
+def listsort1():
+  searched_data = list(db.user.find({}).sort('Name', 1))
+  new_data = []
+  for data in searched_data:
+    gkeywords = [', '.join(list(d.keys())) for d in sorted(data['Gkeyword'], key=lambda x: list(x.values())[0], reverse=True)]
+    new_data.append({"Name": data["Name"], "Gkeyword": gkeywords[:3]})
+  return render_template('mainPage.html', new_data=new_data)
+
+# 한 줄평의 개수를 기준으로 정렬
+@app.route('/user/feature/listsort2', methods=['post'])
+def listsort2():
+    searched_data = list(db.user.find({}))
+    sorted_data = sorted(searched_data, key=lambda x: len(x.get('Comment', [])), reverse=True)
+    new_data = []
+    for data in sorted_data:
+        gkeywords = [', '.join(list(d.keys())) for d in sorted(data['Gkeyword'], key=lambda x: list(x.values())[0], reverse=True)]
+        new_data.append({"Name": data["Name"], "Gkeyword": gkeywords[:3]})
+    return render_template('mainPage.html', new_data=new_data)
+
+
+   
+
+# # ! 로그인 페이지에서의 로그인 기능
+# @app.route('/user/feature/login', methods=['POST'])
+# def ismember():
+
+#   # 클라이언트로부터 데이터를 받기
+#   id_receive = request.form['id_give']
+#   pw_receive = request.form['pw_give']
+  
+#   # 클라이언트로부터 받은 데이터와 DB의 데이터가 불일치할시, "NoneType" 객체 반환하는 것을 방지하기 위해 try문 작성
+#   try:
+#     id = db.user.find_one({"Id": id_receive})['Id']
+#   except:
+#     return jsonify({"result": "id_fail"})
+  
+#   try:
+#     pw = db.user.find_one({"Pw": pw_receive})['Pw']
+#   except:
+#     return jsonify({"result": "pw_fail"})
+  
+#   return jsonify({"result": "success"})
+
+# 작성하고 아래로 옮기자
+# @app.route('/user/feature/getinfo', methods=['POST'])
+# def getInfo():
+  
+#   id_receive = request.form["id_give"]
+#   info = db.user.find_one({"Id": id_receive})
+  
+#   if info:
+#     info["_id"] = str(info["_id"])
+
+#   return jsonify({"result": "success", "user_info": info})
 # * 사진 불러오기
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
