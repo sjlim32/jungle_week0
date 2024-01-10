@@ -177,7 +177,7 @@ def singup():
     "Pw":Pw,
     "Nickname":Nickname,
     "Myself":Myself,
-    "Comment":" ",
+    "Comment":["gg","kk"],
     "Img":[{'filename': filename, 'path': file_path}],
     "Gkeyword": [{'성실함':0},{'친화적':0},{'꼼꼼함':0},{'끈기있는':0}],
     "Bkeyword": [{'불성실함':0},{'비판적':0},{'비협조적':0},{'의지가 약한':0}],
@@ -212,10 +212,31 @@ def search():
     return render_template('mainPage.html', new_data=new_data)
 
 
-# # 카테고리 정렬
-# @app.route('/user/feature/listsort', methods=['post'])
-# def listsort():
-#   sorted_user = list(db.users.find({}).sort[('name',-1),('gkeyword',-1)])  
+# 카테고리 정렬: 가나다순
+@app.route('/user/feature/listsort1', methods=['post'])
+def listsort1():
+  searched_data = list(db.user.find({}).sort('Name', 1))
+  new_data = []
+  for data in searched_data:
+    gkeywords = [', '.join(list(d.keys())) for d in data['Gkeyword']]
+    print(gkeywords)
+    new_data.append({"Name": data["Name"], "Gkeyword": gkeywords[:3]})
+    print(new_data)
+  return render_template('mainPage.html', new_data=new_data)
+
+# 한 줄평의 개수를 기준으로 정렬
+@app.route('/user/feature/listsort2', methods=['post'])
+def listsort2():
+    searched_data = list(db.user.find({}))
+    sorted_data = sorted(searched_data, key=lambda x: len(x.get('Comment', [])), reverse=True)
+    new_data = []
+    for data in sorted_data:
+        gkeywords = [', '.join(list(d.keys())) for d in data['Gkeyword']]
+        new_data.append({"Name": data["Name"], "Gkeyword": gkeywords[:3]})
+    return render_template('mainPage.html', new_data=new_data)
+
+
+   
 
 # ! 로그인 페이지에서의 로그인 기능
 @app.route('/user/feature/login', methods=['POST'])
