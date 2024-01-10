@@ -13,7 +13,7 @@ def mainPage():
     new_data = []
 
     for data in searched_data:
-        gkeywords = [', '.join(list(d.keys())) for d in data['Gkeyword']]
+        gkeywords = [', '.join(list(d.keys())) for d in sorted(data['Gkeyword'], key=lambda x: list(x.values())[0], reverse=True)]
         new_data.append({"Name": data["Name"], "Gkeyword": gkeywords[:3], "Img": data['Img']})
 
     return render_template('mainPage.html', new_data=new_data)
@@ -22,11 +22,11 @@ def mainPage():
 @main_bp.route('/search', methods=['post'])
 def searchingPage():
     user_name = request.form['name']
-    searched_data = list(db.user.find({"Name": user_name}))
+    searched_data = list(db.user.find({"Name": {"$regex": user_name, "$options": "i"}}))
     new_data = []
 
     for data in searched_data:
-        gkeywords = [', '.join(list(d.keys())) for d in data['Gkeyword']]
+        gkeywords = [', '.join(list(d.keys())) for d in sorted(data['Gkeyword'], key=lambda x: list(x.values())[0], reverse=True)]
         new_data.append({"Name": data["Name"], "Gkeyword": gkeywords[:3], "Img": data['Img']})
 
     return render_template('mainPage.html', new_data=new_data)      
