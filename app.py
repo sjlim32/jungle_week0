@@ -33,7 +33,6 @@ def allowed_file(filename):
 def home():
   return render_template('index.html')
 
-<<<<<<< HEAD
 # 로그인 페이지에서의 로그인 기능
 @app.route('/user/feature/login', methods=['POST'])
 def ismember():
@@ -134,8 +133,6 @@ def getData():
   return jsonify({"result": "success"}) 
 
 
-=======
->>>>>>> 10d01120f1d8797ca9e96a2935c56999b3d9d814
 @app.route("/user/login")
 def logInPage():
   return render_template('logIn.html')
@@ -144,9 +141,9 @@ def logInPage():
 def signUpPage():
   return render_template('signUp.html')
 
-@app.route("/main/list")
-def mainPage():
-  return render_template('mainPage.html')
+# @app.route("/main/list")
+# def mainPage():
+#   return render_template('mainPage.html')
 
 @app.route("/user/comment")
 def userPage():
@@ -177,7 +174,7 @@ def singup():
     "Pw":Pw,
     "Nickname":Nickname,
     "Myself":Myself,
-    "Comment":["gg","kk"],
+    "Comment":[ ],
     "Img":[{'filename': filename, 'path': file_path}],
     "Gkeyword": [{'성실함':0},{'친화적':0},{'꼼꼼함':0},{'끈기있는':0}],
     "Bkeyword": [{'불성실함':0},{'비판적':0},{'비협조적':0},{'의지가 약한':0}],
@@ -188,13 +185,13 @@ def singup():
   return render_template('index.html')
 
 # ! 교육생 목록 
-@app.route('/user/feature/userlist', methods=['get'])
+@app.route('/main/list', methods=['get'])
 def user_list():
     searched_data = list(db.user.find({}))
     new_data = []
 
     for data in searched_data:
-        gkeywords = [', '.join(list(d.keys())) for d in data['Gkeyword']]
+        gkeywords = [', '.join(list(d.keys())) for d in sorted(data['Gkeyword'], key=lambda x: list(x.values())[0], reverse=True)]
         new_data.append({"Name": data["Name"], "Gkeyword": gkeywords[:3]})
 
     return render_template('mainPage.html', new_data=new_data)
@@ -206,8 +203,8 @@ def search():
     new_data = []
 
     for data in searched_data:
-        gkeywords = [', '.join(list(d.keys())) for d in data['Gkeyword']]
-        new_data.append({"Name": data["Name"], "Gkeyword": gkeywords[:3]})
+      gkeywords = [', '.join(list(d.keys())) for d in sorted(data['Gkeyword'], key=lambda x: list(x.values())[0], reverse=True)]
+      new_data.append({"Name": data["Name"], "Gkeyword": gkeywords[:3]})
 
     return render_template('mainPage.html', new_data=new_data)
 
@@ -218,10 +215,8 @@ def listsort1():
   searched_data = list(db.user.find({}).sort('Name', 1))
   new_data = []
   for data in searched_data:
-    gkeywords = [', '.join(list(d.keys())) for d in data['Gkeyword']]
-    print(gkeywords)
+    gkeywords = [', '.join(list(d.keys())) for d in sorted(data['Gkeyword'], key=lambda x: list(x.values())[0], reverse=True)]
     new_data.append({"Name": data["Name"], "Gkeyword": gkeywords[:3]})
-    print(new_data)
   return render_template('mainPage.html', new_data=new_data)
 
 # 한 줄평의 개수를 기준으로 정렬
@@ -231,33 +226,33 @@ def listsort2():
     sorted_data = sorted(searched_data, key=lambda x: len(x.get('Comment', [])), reverse=True)
     new_data = []
     for data in sorted_data:
-        gkeywords = [', '.join(list(d.keys())) for d in data['Gkeyword']]
+        gkeywords = [', '.join(list(d.keys())) for d in sorted(data['Gkeyword'], key=lambda x: list(x.values())[0], reverse=True)]
         new_data.append({"Name": data["Name"], "Gkeyword": gkeywords[:3]})
     return render_template('mainPage.html', new_data=new_data)
 
 
    
 
-# ! 로그인 페이지에서의 로그인 기능
-@app.route('/user/feature/login', methods=['POST'])
-def ismember():
+# # ! 로그인 페이지에서의 로그인 기능
+# @app.route('/user/feature/login', methods=['POST'])
+# def ismember():
 
-  # 클라이언트로부터 데이터를 받기
-  id_receive = request.form['id_give']
-  pw_receive = request.form['pw_give']
+#   # 클라이언트로부터 데이터를 받기
+#   id_receive = request.form['id_give']
+#   pw_receive = request.form['pw_give']
   
-  # 클라이언트로부터 받은 데이터와 DB의 데이터가 불일치할시, "NoneType" 객체 반환하는 것을 방지하기 위해 try문 작성
-  try:
-    id = db.user.find_one({"Id": id_receive})['Id']
-  except:
-    return jsonify({"result": "id_fail"})
+#   # 클라이언트로부터 받은 데이터와 DB의 데이터가 불일치할시, "NoneType" 객체 반환하는 것을 방지하기 위해 try문 작성
+#   try:
+#     id = db.user.find_one({"Id": id_receive})['Id']
+#   except:
+#     return jsonify({"result": "id_fail"})
   
-  try:
-    pw = db.user.find_one({"Pw": pw_receive})['Pw']
-  except:
-    return jsonify({"result": "pw_fail"})
+#   try:
+#     pw = db.user.find_one({"Pw": pw_receive})['Pw']
+#   except:
+#     return jsonify({"result": "pw_fail"})
   
-  return jsonify({"result": "success"})
+#   return jsonify({"result": "success"})
 
 # 작성하고 아래로 옮기자
 # @app.route('/user/feature/getinfo', methods=['POST'])
