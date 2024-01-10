@@ -37,11 +37,10 @@ def getKey():
   IsShow = sorted_Bkey[0][IsShow_key]
   
   IsWrited = info["Writed"]
-  
-  # Nick = info["Nickname"]
+  Nick = info["Nickname"]
 
   return jsonify({"result": "success", "GKey": sorted_Gkey, "BKey": sorted_Bkey,
-                  "Comment": Comments, "IsShow": IsShow, "IsWrited": IsWrited }) 
+                  "Comment": Comments, "IsShow": IsShow, "IsWrited": IsWrited, "Nickname": Nick }) 
 
 # 등록 페이지에 저장한 데이터를 DB에 저장
 @getInfo_bp.route('/getdata', methods=['POST'])
