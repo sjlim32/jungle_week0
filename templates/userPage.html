@@ -48,7 +48,7 @@
       justify-content: space-evenly;
       align-items: center;
 
-      width: 50rem;
+      width: 60%;
       height: 25rem;
       margin: 2rem 2rem;
 
@@ -71,12 +71,17 @@
 
     .button {
       font-size: larger;
-      width: 12rem;
-      height: 2.5rem;
+      width: 15rem;
+      height: 3rem;
+      margin: 0 3rem;
+
+      color: white;
+      background-color: darkgreen;
+      border-radius: 30px;  
     }
 
     #keyword_Container {
-      width: 75rem;
+      width: 75%;
       height: auto;
       margin: 2rem 2rem;
 
@@ -126,7 +131,7 @@
     }
 
     #comment_Container {
-      width: 75rem;
+      width: 75%;
       height: 25rem;
 
       margin: 2rem 2rem;
@@ -323,7 +328,6 @@
         </div>
       </span>
     </div>
-    <button class="button" type="button" onclick="location.href='/user/writing'">등록하러 가기</button>
     <div id="keyword_Container">
       <h1 style="padding-left: 2rem;">키워드</h1>
       <div class="keywordBox" id="Gkey-list">
@@ -340,6 +344,7 @@
       </div>
     </div>
     {% endfor %}
+    <button class="button" type="button" onclick="location.href='/user/writing'">등록하러 가기</button>    
   </section>
 </body>
 
