@@ -137,11 +137,20 @@
       width: 10rem;
     }
 
+    .keywordBox {
+      display: flex;
+      align-items: flex-end;
+      flex-flow: column wrap;
+
+      height: 100%;
+      width: auto;
+    }
+
     .keyword {
+      align-items: center;
       text-align: center;
       font-size: 1.5rem;
-      width: 100%;
-      height: 100%;
+      height: auto;
 
       margin: 1rem;
       padding: 0.5rem;
@@ -235,14 +244,23 @@
     {% for data in new_data %}
     <div class="infoContainer">
       <img class="imgBox" src="{{ url_for('static', filename='/uploads/' + data['Img']['filename']) }}" />
-      <div class="name"><a style="font-size: xx-large; text-decoration-line: none; color: black;"
-          href="{{ url_for('userPage', user_name=data['Name']) }}" onclick="setPickName('{{ data['Name'] }}')">
-          {{ data['Name'] }}</a></div>
+      <div class="name">
+        <a style="font-size: xx-large; text-decoration-line: none; color: black;"
+          href="{{ url_for('userPage', user_name=data['Name']) }}"
+          onclick="setPickName('{{ data['Name'] }}')">
+          {{ data['Name'] }}
+        </a>
+      </div>
+      <div class="keywordBox">
       {% for gkeyword in data.Gkeyword %}
-      <div class="keyword">{{ gkeyword }}</div>
+        <div class="keyword">
+          {{ gkeyword }}
+        </div>
       {% endfor %}
+      </div>
     </div>
     {% endfor %}
+    </div>
   </section>
 </body>
 

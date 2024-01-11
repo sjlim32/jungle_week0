@@ -42,29 +42,35 @@
 
     .middleSection {
       display: flex;
-      flex-direction: column;
-      justify-content: center;
+      flex-direction: row;
+      justify-content: space-evenly;
       align-items: center;
+      
+      width: 100%;
+      height: 40rem;
 
       margin-top: 5rem;
+      
+      border-radius: 10px;
     }
 
     #info_Container {
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
       justify-content: space-evenly;
       align-items: center;
 
-      width: 60%;
-      height: 25rem;
+      width: 35%;
+      height: 80%;
       margin: 2rem 2rem;
 
-      border: 1px solid black;
+      border-radius: 10%;
+      border: 1px solid gray;
     }
 
     .ImgBox {
-      width: 10rem;
-      height: 10rem;
+      width: 15rem;
+      height: 15rem;
     }
 
     .introduceBox {
@@ -73,7 +79,7 @@
 
       width: 30rem;
 
-      border: 1px solid red;
+      border: 1px solid lightgray;
     }
 
     .button {
@@ -83,16 +89,19 @@
       margin: 0 3rem;
 
       color: white;
-      background-color: darkgreen;
+      background-color: hsl(120, 37%, 40%);
       border-radius: 30px;  
     }
 
     #keyword_Container {
-      width: 75%;
-      height: auto;
-      margin: 2rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30%;
+      height: 90%;
 
-      border: 1px solid black;
+      border: 1px solid gray;
+      border-radius: 100%;
     }
 
     .keywordBox {
@@ -103,69 +112,43 @@
       margin: 0 0 3rem 0;
     }
 
-    .G_keyword {
-      font-size: larger;
-
+    .commentSection {
       display: flex;
-      align-items: center;
+      flex-direction: column;
       justify-content: center;
-
-      width: 10rem;
-      height: 3rem;
-
-      margin-left: 1rem;
-
-      color: white;
-      background-color: firebrick;
-      border-radius: 15px;
-    }
-
-    .B_keyword {
-      font-size: larger;
-
-      display: flex;
       align-items: center;
-      justify-content: center;
-
-      width: 10rem;
-      height: 3rem;
-
-      margin-left: 1rem;
-
-      color: white;
-      background-color: steelblue;
-      border-radius: 15px;
     }
 
     #comment_Container {
-      width: 75%;
-      height: 25rem;
+      text-align: center;
+      width: 90%;
+      height: 50rem;
 
-      margin: 2rem 2rem;
+      margin: 3rem 0;
 
-      border: 1px solid black;
+      border-radius: 15px;
+      border: 1px solid lightgray;
+    }
+
+    #Comment-list {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .commentBox {
       display: flex;
       flex-direction: row;
       align-items: center;
+      justify-content: space-between;
 
-      height: 3rem;
-
-      margin: 2rem;
-
-      border: 1px solid green;
-    }
-
-    .nickname {
-      font-size: larger;
-      margin-left: 3rem;
-    }
+      width: 80%;
+    }    
 
     .comment {
-      font-size: large;
-      margin-left: 5rem;
+      font-size: x-large;
+      margin-top: 2rem;
+      border-bottom: 1px solid lightgray
     }
   </style>
 </head>
@@ -208,9 +191,6 @@ $(document).ready(function () {
   // 변수 불러오기(사용자 세션 유지용)
   var loadedId = sessionStorage.getItem("name");
   var loadedName = sessionStorage.getItem("pName");
-  console.log(loadedId)
-  console.log(loadedName)
-
 
   // 페이지 로딩 후 함수가 실행 
   $(document).ready(function () {
@@ -276,8 +256,21 @@ $(document).ready(function () {
         }
 
         addKeyword(TKey, Comments, IsWrited, Nick)
+        addComment(Comments)
       }
     })
+
+    function addComment(Comments) {
+      for (let i = 0; i < Comments.length+1; i++) {
+          $('#Comment-list').append(`
+          <div class="commentBox">
+            <span class="comment" style="width:20rem;">${Comments[i]['Nick']}</span>
+            <span class="comment" style="width:60rem;">${Comments[i]['Comment']}</span>
+            <div>  
+        `);
+        }
+    }
+
 
     function addKeyword(TKey, Comments, IsWrited, Nick) {
       for (let i = 0; i < TKey.length; i++) {
@@ -289,11 +282,8 @@ $(document).ready(function () {
 
         for (let i = 0; i < Comments.length; i++) {
           let Comment = Object.values(Comments[i]).join('') // GPT
-          $('#Comment-list').append(`
-          <div class="comment">${Comment}</div>
-          <div class="comment">${Nick}</div>
-        `);
         }
+
 
         if (IsWrited.includes(loadedId)) {
           $('#Bkey-list').css('display', 'flex');
@@ -386,24 +376,17 @@ $(document).ready(function () {
         <div class="introduceBox">
           <h1 id="myName">{{ info['Name'] }}</h1>
           <h3 id="mySelf">{{ info['Myself'] }}</h3>
-          <div></div>
         </div>
       </span>
     </div>
     <div id="keyword_Container">
-      <h1 style="padding-left: 2rem;">키워드</h1>
-
-      <div class="keywordBox" id="Gkey-list">
-
-      </div>
-      <div class="keywordBox" id="Bkey-list">
-
-      </div>
     </div>
+  </section>
+  <section class="commentSection">
     <div id="comment_Container">
-      <h1 style="padding-left: 2rem;">한줄평</h1>
-      <div class="commentBox" id="Comment-list">
-
+      <h1 style="font-size: xx-large;">한줄평</h1>
+        <div id="Comment-list">
+        </div>
       </div>
     </div>
     {% endfor %}
