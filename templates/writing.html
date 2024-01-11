@@ -21,8 +21,8 @@
     }
 
     #keyword_Container {
-      width: 75rem;
-      height: auto;
+      width: 75%;
+      height: 50%;
       margin: 2rem 2rem;
 
       border: 1px solid black;
@@ -30,7 +30,7 @@
 
     .keywordBox {
       display: flex;
-      flex-direction: row;
+      flex-flow: row wrap;
       align-items: center;
 
       margin: 0 0 3rem 0;
@@ -41,17 +41,18 @@
       align-items: center;
       justify-content: center;
 
-      width: 7rem;
-      height: 2rem;
+      font-size: 1.5rem;
+      width: 10%;
+      height: 15%;
 
-      margin-left: 1rem;
+      margin: 1rem;
 
-      background-color: beige;
+      background-color: whitesmoke;
       border-radius: 15px;
     }
 
     #comment_Container {
-      width: 75rem;
+      width: 75%;
       height: auto;
       margin: 2rem 2rem;
 
@@ -59,9 +60,12 @@
     }
 
     .commentBox {
-      font-size: larger;
-      width: 70rem;
-      height: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: x-large;
+      width: 90%;
+      height: auto;
       resize: none;
       overflow: hidden;
 
@@ -74,10 +78,13 @@
 
     .button {
       font-size: larger;
-      width: 12rem;
-      height: 2.5rem;
+      width: 10rem;
+      height: 3rem;
+      margin: 0 3rem;
 
-      margin-bottom: 3rem;
+      color: white;
+      background-color: darkgreen;
+      border-radius: 30px;  
     }
   </style>
   <script>
@@ -169,38 +176,43 @@
       <h1 style="padding-left: 2rem;">장점 키워드를 선택해주세요. (최대 3개)</h1>
       <div class="keywordBox">
         <button class="keyword" onclick="isGClick(this)">성실함</button>
-        <button class="keyword" onclick="isGClick(this)">친화적</button>
-        <button class="keyword" onclick="isGClick(this)">꼼꼼함</button>
-        <button class="keyword" onclick="isGClick(this)">끈기있는</button>
+        <button class="keyword" onclick="isGClick(this)">친근함</button>
+        <button class="keyword" onclick="isGClick(this)">긍정맨</button>
+        <button class="keyword" onclick="isGClick(this)">리더쉽</button>
+        <button class="keyword" onclick="isGClick(this)">노력파</button>
+        <button class="keyword" onclick="isGClick(this)">꾀돌이</button>
+        <button class="keyword" onclick="isGClick(this)">엉뚱함</button>
+        <button class="keyword" onclick="isGClick(this)">청결</button>
+        <button class="keyword" onclick="isGClick(this)">부지런</button>
+        <button class="keyword" onclick="isGClick(this)">솔직담백</button>
+        <button class="keyword" onclick="isGClick(this)">이타적</button>
+        <button class="keyword" onclick="isGClick(this)">활발</button>
+        <button class="keyword" onclick="isGClick(this)">재치만점</button>
+        <button class="keyword" onclick="isGClick(this)">감성적</button>
+        <button class="keyword" onclick="isGClick(this)">완벽주의</button>
       </div>
       <h1 style="padding-left: 2rem;">단점 키워드를 선택해주세요. (1개)</h1>
       <div class="keywordBox">
-        <button class="keyword" onclick="isBClick(this)">불성실함</button>
-        <button class="keyword" onclick="isBClick(this)">비판적</button>
-        <button class="keyword" onclick="isBClick(this)">비협조적</button>
-        <button class="keyword" onclick="isBClick(this)">의지가 약한</button>
+        <button class="keyword" onclick="isBClick(this)">게으름</button>
+        <button class="keyword" onclick="isBClick(this)">다혈질</button>
+        <button class="keyword" onclick="isBClick(this)">이기적</button>
+        <button class="keyword" onclick="isBClick(this)">거만</button>
+        <button class="keyword" onclick="isBClick(this)">고지식</button>
+        <button class="keyword" onclick="isBClick(this)">수동적</button>
+        <button class="keyword" onclick="isBClick(this)">욕쟁이</button>
+        <button class="keyword" onclick="isBClick(this)">부정파</button>
+        <button class="keyword" onclick="isBClick(this)">새가슴</button>
+        <button class="keyword" onclick="isBClick(this)">황소고집</button>
+        <button class="keyword" onclick="isBClick(this)">더러움</button>
+        <button class="keyword" onclick="isBClick(this)">잠만보</button>
+        <button class="keyword" onclick="isBClick(this)">벌구</button>
+        <button class="keyword" onclick="isBClick(this)">건망증</button>
+        <button class="keyword" onclick="isBClick(this)">욕심쟁이</button>
       </div>
-
-      <!-- <div id="key""><p>성실함</p></div>
-        <div id="key"><p>열정적임</p></div>
-        <div id="key"><p>친절함</p></div> 
-        "Gkeyword": [{'성실함':0},{'친화적':0},{'꼼꼼함':0},{'끈기있는':0}],
-      "Bkeyword": [{'불성실함':0},{'비판적':0},{'비협조적':0},{'의지가 약한':0}],
-      -->
-      <!--      
-      <h1 style="padding-left: 2rem;"> 선택된 키워드</h1>
-      <div class="keywordBox">
-
-        <button class="keyword">게으름</button>
-        <button class="keyword">성급함</button>
-        <button class="keyword">지각쟁이</button>
-      
-      </div>
-      -->
     </div>
     <div id="comment_Container">
       <h1 style="padding-left: 2rem;"> 한줄평</h1>
-      <textarea class="commentBox" id="inputComment" placeholder="한줄평을 작성해주세요.(최대 30자)" maxlength="30"></textarea>
+      <input class="commentBox" id="inputComment" placeholder="한줄평을 작성해주세요.(최대 30자)" maxlength="30"></input>
     </div>
 
     <button type="button" class="button" onclick="sendData()">등록하기</button>
