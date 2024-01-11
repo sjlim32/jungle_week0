@@ -38,8 +38,10 @@ def getKey():
   
   IsWrited = info["Writed"]
   Nick = info["Nickname"]
+  TKey = sorted_Gkey + sorted_Bkey
 
-  return jsonify({"result": "success", "GKey": sorted_Gkey, "BKey": sorted_Bkey,
+  # "GKey": sorted_Gkey, "BKey": sorted_Bkey,
+  return jsonify({"result": "success", "TKey": TKey,
                   "Comment": Comments, "IsShow": IsShow, "IsWrited": IsWrited, "Nickname": Nick }) 
 
 # 등록 페이지에 저장한 데이터를 DB에 저장

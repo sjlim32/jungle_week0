@@ -16,8 +16,8 @@
     }
 
     a:hover {
-      color:goldenrod;
-      text-decoration:none;
+      color: goldenrod;
+      text-decoration: none;
     }
 
     .topSection {
@@ -86,10 +86,10 @@
 
       width: 5rem;
       height: 3rem;
-      
+
       color: white;
       background-color: darkgreen;
-      border-radius: 30px;  
+      border-radius: 30px;
     }
 
     .sorter {
@@ -100,7 +100,7 @@
 
       color: white;
       background-color: darkgreen;
-      border-radius: 30px;  
+      border-radius: 30px;
     }
 
     .listSection {
@@ -154,16 +154,20 @@
   </style>
 
   <script>
-    $(document).ready( function() {
-    showUser()
+    $(document).ready(function () {
+      showUser()
     });
-      
     
+    function setPickName(name) {
+      sessionStorage.setItem("pName", name);
+      return name
+    }
+
     function showUser() {
       if (sessionStorage.getItem('name')) {
         $('#user_Container').append(`
         <div style="font-size:x-large;">
-          <a href="/user/${sessionStorage.getItem('name')}/comment" style="font-size:xx-large;">${sessionStorage.getItem('name')}
+          <a href="/user/${sessionStorage.getItem('name')}/comment" style=" font-size:xx-large;">${sessionStorage.getItem('name')}
           </a>님 반갑습니다
           <span id="logoutButton" style="margin-left:2rem; text-decoration: none; cursor: pointer; font-size:larger;">
             로그아웃
@@ -172,10 +176,10 @@
         )
 
         $('#logoutButton').on('click', function () {
-        // 로그아웃 시 필요한 동작 수행
-        sessionStorage.clear();
-        window.location.href = '/';
-      });
+          // 로그아웃 시 필요한 동작 수행
+          sessionStorage.clear();
+          window.location.href = '/';
+        });
 
       } else {
         $('#user_Container').append(`
@@ -188,6 +192,12 @@
         )
       }
     }
+
+    var loadedId = sessionStorage.getItem("name" + "이건 main에서의 Id");
+    var loadedName = sessionStorage.getItem("pName" + "이건 main에서의 name");
+    console.log(loadedId)
+    console.log(loadedName)
+
     // // @@ 선택된 교육생 세션 유지용, 일단 스트링으로 표현, merge 후 수정 예정 @@
     // var pickId = "k"
     // sessionStorage.setItem("pickId", pickId)
@@ -200,7 +210,8 @@
 <body>
   <section class="topSection">
     <div class="logo">
-      <a href="/main/list"><img src="{{ url_for('static', filename='logo.png') }}" width="300" height="120" style="display:flex"></a>
+      <a href="/main/list"><img src="{{ url_for('static', filename='logo.png') }}" width="300" height="120"
+          style="display:flex"></a>
     </div>
     <div id="user_Container">
     </div>

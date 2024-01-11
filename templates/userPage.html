@@ -22,8 +22,8 @@
     }
 
     a:hover {
-      color:goldenrod;
-      text-decoration:none;
+      color: goldenrod;
+      text-decoration: none;
     }
 
     .topSection {
@@ -39,6 +39,7 @@
       width: 30rem;
       margin: 1rem 3rem 0 0;
     }
+
     .middleSection {
       display: flex;
       flex-direction: column;
@@ -164,14 +165,14 @@
   </style>
 </head>
 <script>
-    $(document).ready( function() {
+$(document).ready(function () {
     showUser()
-    });
-      
-    
-    function showUser() {
-      if (sessionStorage.getItem('name')) {
-        $('#user_Container').append(`
+  });
+
+
+  function showUser() {
+    if (sessionStorage.getItem('name')) {
+      $('#user_Container').append(`
         <div style="font-size:x-large;">
           <a href="/user/${sessionStorage.getItem('name')}/comment" style=" font-size:xx-large;">${sessionStorage.getItem('name')}
           </a>님 반갑습니다
@@ -179,29 +180,32 @@
             로그아웃
           </span>
         <div>`
-        )
+      )
 
-        $('#logoutButton').on('click', function () {
+      $('#logoutButton').on('click', function () {
         // 로그아웃 시 필요한 동작 수행
         sessionStorage.clear();
         window.location.href = '/';
       });
-      
-      } else {
-        $('#user_Container').append(`
+
+    } else {
+      $('#user_Container').append(`
         <div>
           <a href="/user/login" style="text-decoration: none; font-size:xx-large;">로그인
           </a>
           <a href="/user/signup" style="margin-left:2rem; text-decoration: none; font-size:xx-large;">회원가입
           </a>
         <div>`
-        )
-      }
+      )
     }
+  }
 
   // 변수 불러오기(사용자 세션 유지용)
-  var loadedId = sessionStorage.getItem("myId");
+  var loadedId = sessionStorage.getItem("name");
   var loadedName = sessionStorage.getItem("pName");
+  console.log(loadedId)
+  console.log(loadedName)
+
 
   // 페이지 로딩 후 함수가 실행 
   $(document).ready(function () {
@@ -230,7 +234,7 @@
         }
         // API로부터 받은 response에서 user_info의 키 값으로 교육생 정보 얻기
         let userInfo = response['user_info']
-        console.log(userInfo)
+
         let name = userInfo['Name']
         $('#myName').text(name)
         let mySelf = userInfo['Myself']
@@ -252,9 +256,8 @@
           alert("정보를 받아오지 못했습니다.")
           return
         }
-        let GKey = response['GKey']
+        let TKey = response['TKey']
 
-        let BKey = response['BKey']
         let Nick = response['Nickname']
         let Comments = response['Comment']
         let IsShow = response['IsShow']
@@ -267,96 +270,90 @@
           $('#Bkey-list').css('display', 'none');
         }
 
-        addKeyword(GKey, BKey, Comments, IsWrited, Nick)
+        addKeyword(TKey, Comments, IsWrited, Nick)
       }
     })
 
-    function addKeyword(GKey, BKey, Comments, IsWrited, Nick) {
-      for (let i = 0; i < GKey.length; i++) {
-        let GKeyValue = Object.keys(GKey[i]).join(", "); // GPT
+    function addKeyword(TKey, Comments, IsWrited, Nick) {
+      for (let i = 0; i < TKey.length; i++) {
+        let TKeyValue = Object.keys(TKey[i]).join(", "); // GPT
 
-        $('#Gkey-list').append(`
-            <span class="G_keyword">${GKeyValue}</span>
-        `);
-      }
-      let BKeyValue = Object.keys(BKey[0]).join(", ");
-
-      $('#Bkey-list').append(`
-            <span class="B_keyword">${BKeyValue}</span>
+        $('#Bkey-list').append(`
+            <span class="B_keyword">${TKeyValue}</span>
         `);
 
-      for (let i = 0; i < Comments.length; i++) {
-        let Comment = Object.values(Comments[i]).join('') // GPT
-        $('#Comment-list').append(`
+        for (let i = 0; i < Comments.length; i++) {
+          let Comment = Object.values(Comments[i]).join('') // GPT
+          $('#Comment-list').append(`
           <div class="comment">${Comment}</div>
           <div class="comment">${Nick}</div>
         `);
-      }
-
-      if (IsWrited.includes(loadedId)) {
-        $('#Bkey-list').css('display', 'flex');
-        $('#Gkey-list').css('display', 'flex');
-        $('#Comment-list').css('display', 'flex');
-      } else {
-        $('#Bkey-list').css('display', 'none');
-        $('#Gkey-list').css('display', 'none');
-        $('#Comment-list').css('display', 'none');
-      }
-      // 워드클라우드 모듈불러오기
-      zingchart.MODULESDIR = 'https://cdn.zingchart.com/modules/';
-
-      // 워드클라우드에 사용할 words 배열 생성
-      var wordsArray = GKey.map(function (item) {
-        var key = Object.keys(item)[0]; // GKey 데이터의 키
-        var count = item[key]; // GKey 데이터의 밸류값
-        return {
-          text: key,
-          count: count
-        };
-      });
-
-      // 워드클라우드 설정
-      var myConfig = {
-        type: 'wordcloud',
-        options: {
-          words: wordsArray,
-          minLength: 5,
-          ignore: [''],
-          maxItems: 40,
-          aspect: 'spiral',
-          colorType: 'palette',
-          palette: ['#D32F2F', '#5D4037', '#1976D2', '#E53935', '#6D4C41', '#1E88E5', '#F44336', '#795548', '#2196F3', '#EF5350', '#8D6E63', '#42A5F5'],
-          style: {
-            fontFamily: 'Crete Round',
-            hoverState: {
-              backgroundColor: '#D32F2F',
-              borderRadius: 2,
-              fontColor: 'white'
-            },
-            tooltip: {
-              text: '%text: %hits',
-              visible: true,
-              alpha: 0.9,
-              backgroundColor: '#1976D2',
-              borderRadius: 2,
-              borderColor: 'none',
-              fontColor: 'white',
-              fontFamily: 'Georgia',
-              textAlpha: 1
-            }
-          }
-        },
-        source: {
-          fontColor: '#64B5F6',
-          fontSize: 10,
-          fontFamily: 'Georgia',
-          fontWeight: 'normal',
-          marginBottom: '10%'
         }
 
-      };
-    //워드클라우드 렌더링
-    zingchart.render({
+        if (IsWrited.includes(loadedId)) {
+          $('#Bkey-list').css('display', 'flex');
+          $('#Gkey-list').css('display', 'flex');
+          $('#Comment-list').css('display', 'flex');
+        } else {
+          $('#Bkey-list').css('display', 'none');
+          $('#Gkey-list').css('display', 'none');
+          $('#Comment-list').css('display', 'none');
+        }
+        // 워드클라우드 모듈불러오기
+        zingchart.MODULESDIR = 'https://cdn.zingchart.com/modules/';
+
+        // 워드클라우드에 사용할 words 배열 생성
+        var wordsArray = TKey.map(function (item) {
+          var key = Object.keys(item)[0]; // GKey 데이터의 키
+          var count = item[key]; // GKey 데이터의 밸류값
+          return {
+            text: key,
+            count: count
+          };
+        });
+
+        // 워드클라우드 설정
+        var myConfig = {
+          type: 'wordcloud',
+          options: {
+            words: wordsArray,
+            minLength: 5,
+            ignore: [''],
+            maxItems: 40,
+            aspect: 'spiral',
+            colorType: 'palette',
+            palette: ['#D32F2F', '#5D4037', '#1976D2', '#E53935', '#6D4C41', '#1E88E5', '#F44336', '#795548', '#2196F3', '#EF5350', '#8D6E63', '#42A5F5'],
+            style: {
+              fontFamily: 'Crete Round',
+              hoverState: {
+                backgroundColor: '#D32F2F',
+                borderRadius: 2,
+                fontColor: 'white'
+              },
+              tooltip: {
+                text: '%text: %hits',
+                visible: true,
+                alpha: 0.9,
+                backgroundColor: '#1976D2',
+                borderRadius: 2,
+                borderColor: 'none',
+                fontColor: 'white',
+                fontFamily: 'Georgia',
+                textAlpha: 1
+              }
+            }
+          },
+          source: {
+            fontColor: '#64B5F6',
+            fontSize: 10,
+            fontFamily: 'Georgia',
+            fontWeight: 'normal',
+            marginBottom: '10%'
+          }
+
+        };
+        //워드클라우드 렌더링
+        zingchart.render({
           id: 'keyword_Container',
           data: myConfig,
           height: 400,
@@ -364,18 +361,18 @@
         });
       };
     }
-
+  }
 </script>
-<html>
 
 <body>
   <section class="topSection">
     <div class="logo">
-      <a href="/main/list"><img src="{{ url_for('static', filename='logo.png') }}" width="300" height="120" style="display:flex"></a>
+      <a href="/main/list"><img src="{{ url_for('static', filename='logo.png') }}" width="300" height="120"
+          style="display:flex"></a>
     </div>
     <div id="user_Container">
     </div>
-  </section>  
+  </section>
   <section class="middleSection">
     {% for info in student %}
     <div id="info_Container">
@@ -409,5 +406,4 @@
   </section>
 
 </body>
-
 </html>

@@ -115,7 +115,7 @@
         selectedBKey = selectedBKey.filter(item => item !== keyword);
         button.style.color = "";
       } else {
-        if (selectedBKey.length < 3) {
+        if (selectedBKey.length < 1) {
           selectedBKey.push(keyword);
           button.style.color = "blue";
         }
@@ -173,7 +173,7 @@
         <button class="keyword" onclick="isGClick(this)">꼼꼼함</button>
         <button class="keyword" onclick="isGClick(this)">끈기있는</button>
       </div>
-      <h1 style="padding-left: 2rem;">단점 키워드를 선택해주세요. (최대 3개)</h1>
+      <h1 style="padding-left: 2rem;">단점 키워드를 선택해주세요. (1개)</h1>
       <div class="keywordBox">
         <button class="keyword" onclick="isBClick(this)">불성실함</button>
         <button class="keyword" onclick="isBClick(this)">비판적</button>
