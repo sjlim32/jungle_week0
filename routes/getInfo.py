@@ -52,6 +52,10 @@ def getData():
   pname_receive = request.form["pname_give"]
   id_receive = request.form["id_give"]
   comment_receive = request.form["comment_give"]
+  
+  cmt_nick = db.user.find_one({"Name": id_receive})['Nickname']
+
+  newComment = {'Nick': cmt_nick, 'Comment': comment_receive}
 
   # Flask에서 Ajax에서 보내준 문자열 데이터를 parsing하여 JSONArray로 변환
   selectedGKey = json.loads(request.form["selectedGKey"]) 
@@ -62,14 +66,9 @@ def getData():
 
   if not user_info:
     return jsonify({"result": 'error'})
-
-  # Comment 업데이트 또는 추가
-  if type(user_info['Comment']) != None:
-    # DB에 comment가 저장돼 있으면 append
-    user_info['Comment'].append(comment_receive)
   else:
-    # DB에 comment가 없으면 새로운 리스트 생성
-    user_info['Comment'] = [comment_receive]
+    user_info['Comment'].append(newComment)
+
 
   # Writed 업데이트 또는 추가하기
   if 'Writed' not in user_info:
