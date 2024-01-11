@@ -90,8 +90,8 @@
   <script>
     // 변수 불러오기(사용자 세션 유지용)
     var loadedId = sessionStorage.getItem("myId");
-    // @@ 선택한 교육생 세션, 수정 예정
-    var loadedPId = sessionStorage.getItem("pickId");
+    // 선택한 교육생 세션 @@@@@@@@@@@@@@ id로된거 수정
+    var loadedName = sessionStorage.getItem("pName");
 
     var selectedGKey = [];
     var selectedBKey = [];
@@ -122,7 +122,7 @@
         selectedBKey = selectedBKey.filter(item => item !== keyword);
         button.style.color = "";
       } else {
-        if (selectedBKey.length < 3) {
+        if (selectedBKey.length < 1) {
           selectedBKey.push(keyword);
           button.style.color = "blue";
         }
@@ -147,7 +147,7 @@
       $.ajax({
         type: "POST",
         url: "/user/feature/getdata",
-        data: {'id_give': loadedId, 'pid_give': loadedPId, 'comment_give': comment,
+        data: {'id_give': loadedId, 'pname_give': loadedName, 'comment_give': comment,
         'selectedGKey': JSON.stringify(selectedGKey),
         'selectedBKey': JSON.stringify(selectedBKey)
         // ajax에서 API로 배열을 넘기기 위해 문자열로 변환한다.
@@ -160,7 +160,7 @@
           // 성공한 경우
           alert("등록이 완료되었습니다!")
           console.log(response)
-          window.location.href = '/user/comment';
+          window.location.href = '/main/list' ;
         }
       });
     }
@@ -170,7 +170,7 @@
 
 <body>
   <section class="middleSection">
-    <h1></h1>
+    <!-- <h1>춘식이(세션 수정 예정)</h1> -->
 
     <div id="keyword_Container">
       <h1 style="padding-left: 2rem;">장점 키워드를 선택해주세요. (최대 3개)</h1>
@@ -191,7 +191,7 @@
         <button class="keyword" onclick="isGClick(this)">감성적</button>
         <button class="keyword" onclick="isGClick(this)">완벽주의</button>
       </div>
-      <h1 style="padding-left: 2rem;">단점 키워드를 선택해주세요. (최대 3개)</h1>
+      <h1 style="padding-left: 2rem;">단점 키워드를 선택해주세요. (1개)</h1>
       <div class="keywordBox">
         <button class="keyword" onclick="isBClick(this)">게으름</button>
         <button class="keyword" onclick="isBClick(this)">다혈질</button>

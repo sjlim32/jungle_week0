@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, url_for
+from flask import Flask, render_template, request, jsonify, send_from_directory, url_for
 from bson import ObjectId
 from werkzeug.utils import secure_filename
 import os
@@ -71,7 +71,7 @@ def singup():
     "Name":Name,
     "Nickname":Nickname,
     "Myself":Myself,
-    "Comment":["gg","kk"],
+    "Comment":[],
     "Img":{'filename': filename, 'path': file_path},
     "Gkeyword": [{'성실함':0},{'친근함':0},{'긍정맨':0},{'리더쉽':0},{'노력파':0},{'꾀돌이':0},{'엉뚱함':0},{'청결':0},{'부지런':0},{'솔직담백':0}, {'이타적':0}, {'활발':0},{'재치만점':0},{'감성적':0}, {'완벽주의':0}],
     "Bkeyword": [{'게으름':-5},{'다혈질':-5},{'이기적':-5},{'거만':-5}
