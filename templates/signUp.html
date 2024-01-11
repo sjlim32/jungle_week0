@@ -126,7 +126,7 @@
       success: function (response) {
         if (response["result"] == "success") {
           alert("회원가입을 완료했습니다.");
-          window.location.href = '/';
+          window.location.href = '/user/login';
         } else if (response["result"] == "fail") {
           alert("회원가입에 실패했습니다.")
         }
@@ -197,7 +197,7 @@
       </span>
       <span class="button_Container">
         <button onclick="signUp()" class="button" type="button" >가입</button>
-        <button class="button" type="button" >취소</button>
+        <button onclick="location.href='/'" class="button" type="button" >취소</button>
 
       </span>
     </form>

@@ -42,29 +42,35 @@
 
     .middleSection {
       display: flex;
-      flex-direction: column;
-      justify-content: center;
+      flex-direction: row;
+      justify-content: space-evenly;
       align-items: center;
+      
+      width: 100%;
+      height: 40rem;
 
       margin-top: 5rem;
+      
+      border-radius: 10px;
     }
 
     #info_Container {
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
       justify-content: space-evenly;
       align-items: center;
 
-      width: 60%;
-      height: 25rem;
+      width: 35%;
+      height: 80%;
       margin: 2rem 2rem;
 
-      border: 1px solid black;
+      border-radius: 10%;
+      border: 1px solid gray;
     }
 
     .ImgBox {
-      width: 10rem;
-      height: 10rem;
+      width: 15rem;
+      height: 15rem;
     }
 
     .introduceBox {
@@ -73,7 +79,7 @@
 
       width: 30rem;
 
-      border: 1px solid red;
+      border: 1px solid lightgray;
     }
 
     .button {
@@ -83,16 +89,19 @@
       margin: 0 3rem;
 
       color: white;
-      background-color: darkgreen;
+      background-color: hsl(120, 37%, 40%);
       border-radius: 30px;  
     }
 
     #keyword_Container {
-      width: 75%;
-      height: auto;
-      margin: 2rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30%;
+      height: 90%;
 
-      border: 1px solid black;
+      border: 1px solid gray;
+      border-radius: 100%;
     }
 
     .keywordBox {
@@ -103,69 +112,43 @@
       margin: 0 0 3rem 0;
     }
 
-    .G_keyword {
-      font-size: larger;
-
+    .commentSection {
       display: flex;
-      align-items: center;
+      flex-direction: column;
       justify-content: center;
-
-      width: 10rem;
-      height: 3rem;
-
-      margin-left: 1rem;
-
-      color: white;
-      background-color: firebrick;
-      border-radius: 15px;
-    }
-
-    .B_keyword {
-      font-size: larger;
-
-      display: flex;
       align-items: center;
-      justify-content: center;
-
-      width: 10rem;
-      height: 3rem;
-
-      margin-left: 1rem;
-
-      color: white;
-      background-color: steelblue;
-      border-radius: 15px;
     }
 
     #comment_Container {
-      width: 75%;
-      height: 25rem;
+      text-align: center;
+      width: 90%;
+      height: 50rem;
 
-      margin: 2rem 2rem;
+      margin: 3rem 0;
 
-      border: 1px solid black;
+      border-radius: 15px;
+      border: 1px solid lightgray;
+    }
+
+    #Comment-list {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .commentBox {
       display: flex;
       flex-direction: row;
       align-items: center;
+      justify-content: space-between;
 
-      height: 3rem;
-
-      margin: 2rem;
-
-      border: 1px solid green;
-    }
-
-    .nickname {
-      font-size: larger;
-      margin-left: 3rem;
-    }
+      width: 80%;
+    }    
 
     .comment {
-      font-size: large;
-      margin-left: 5rem;
+      font-size: x-large;
+      margin-top: 2rem;
+      border-bottom: 1px solid lightgray
     }
   </style>
 </head>
@@ -176,10 +159,10 @@ $(document).ready(function () {
 
 
   function showUser() {
-    if (sessionStorage.getItem('id')) {
+    if (sessionStorage.getItem('name')) {
       $('#user_Container').append(`
         <div style="font-size:x-large;">
-          <a href="/user/${sessionStorage.getItem('id')}/comment" style=" font-size:xx-large;">${sessionStorage.getItem('id')}
+          <a href="/user/${sessionStorage.getItem('name')}/comment" style=" font-size:xx-large;">${sessionStorage.getItem('name')}
           </a>님 반갑습니다
           <span id="logoutButton" style="margin-left:2rem; text-decoration: none; cursor: pointer; font-size:larger;">
             로그아웃
@@ -206,11 +189,8 @@ $(document).ready(function () {
   }
 
   // 변수 불러오기(사용자 세션 유지용)
-  var loadedName = sessionStorage.getItem("name");
-  var loadedpName = sessionStorage.getItem("pName");
-  console.log(loadedName)
-  console.log(loadedpName)
-
+  var loadedId = sessionStorage.getItem("name");
+  var loadedName = sessionStorage.getItem("pName");
 
   // 페이지 로딩 후 함수가 실행 
   $(document).ready(function () {
@@ -231,7 +211,7 @@ $(document).ready(function () {
     $.ajax({
       type: "POST",
       url: "/user/feature/getinfo",
-      data: { 'pname_give': loadedpName, 'name_give':loadedName },
+      data: { 'pname_give': loadedName },
       success: function (response) {
         if (response['result'] != 'success') {
           alert("정보를 받아오지 못했습니다.")
@@ -239,11 +219,10 @@ $(document).ready(function () {
         }
         // API로부터 받은 response에서 user_info의 키 값으로 교육생 정보 얻기
         let userInfo = response['user_info']
-        let userInfo_p = response['user_info_p']
 
-        let name = userInfo_p['Name']
+        let name = userInfo['Name']
         $('#myName').text(name)
-        let mySelf = userInfo_p['Myself']
+        let mySelf = userInfo['Myself']
         $('#mySelf').text(mySelf)
       }
     })
@@ -256,61 +235,63 @@ $(document).ready(function () {
       type: "POST",
       url: "/user/feature/getkey",
       // 명단에서 클릭한 사람으로 바꿔야
-      data: { 'pname_give': loadedpName },
+      data: { 'pname_give': loadedName },
       success: function (response) {
         if (response['result'] != 'success') {
           alert("정보를 받아오지 못했습니다.")
           return
         }
         let TKey = response['TKey']
+
         let Nick = response['Nickname']
         let Comments = response['Comment']
+        let IsShow = response['IsShow']
         let IsWrited = response['IsWrited']
 
         // 부정 키워드는 자기 자신만 보기
-        // if (loadedId == loadedName && IsShow >= 10) {
-        //   $('#Bkey-list').css('display', 'flex');
-        // } else {
-        //   $('#Bkey-list').css('display', 'none');
-        // }
+        if (loadedId == loadedName && IsShow >= 10) {
+          $('#Bkey-list').css('display', 'flex');
+        } else {
+          $('#Bkey-list').css('display', 'none');
+        }
 
         addKeyword(TKey, Comments, IsWrited, Nick)
+        addComment(Comments)
       }
     })
+
+    function addComment(Comments) {
+      for (let i = 0; i < Comments.length+1; i++) {
+          $('#Comment-list').append(`
+          <div class="commentBox">
+            <span class="comment" style="width:20rem;">${Comments[i]['Nick']}</span>
+            <span class="comment" style="width:60rem;">${Comments[i]['Comment']}</span>
+            <div>  
+        `);
+        }
+    }
+
 
     function addKeyword(TKey, Comments, IsWrited, Nick) {
       for (let i = 0; i < TKey.length; i++) {
         let TKeyValue = Object.keys(TKey[i]).join(", "); // GPT
 
-        // $('#Bkey-list').append(`
-        //     <span class="B_keyword">${TKeyValue}</span>
-        // `);
+        $('#Bkey-list').append(`
+            <span class="B_keyword">${TKeyValue}</span>
+        `);
 
         for (let i = 0; i < Comments.length; i++) {
           let Comment = Object.values(Comments[i]).join('') // GPT
-          $('#Comment-list').append(`
-          <div class="comment">${Nick}</div>
-          <div class="comment">${Comment}</div>
-        `);
         }
 
-         if (IsWrited.includes(loadedName)) {
-           $('#keyword_Container').css('display', 'flex');
-           $('#Comment-list').css('display', 'flex');
-         } else {
-           $('#keyword_Container').css('display', 'none');
-           $('#Comment-list').css('display', 'none');
-         }
 
-        // if (IsWrited.includes(loadedName.trim())) {
-        //   $('#keyword_Container').css('display', 'flex');
-        //   $('#Comment-list').css('display', 'flex');
-        // } else {
-        //   $('#keyword_Container').css('display', 'none');
-        //   $('#Comment-list').css('display', 'none');
-        // }
-
-        
+        if (IsWrited.includes(loadedId)) {
+          $('#keyword_Container').css('display', 'flex');
+          $('#Comment-list').css('display', 'flex');
+        } else {
+          $('#keyword_Container').css('display', 'none');
+          $('#Comment-list').css('display', 'none');
+        }
         // 워드클라우드 모듈불러오기
         zingchart.MODULESDIR = 'https://cdn.zingchart.com/modules/';
 
@@ -393,24 +374,17 @@ $(document).ready(function () {
         <div class="introduceBox">
           <h1 id="myName">{{ info['Name'] }}</h1>
           <h3 id="mySelf">{{ info['Myself'] }}</h3>
-          <div></div>
         </div>
       </span>
     </div>
     <div id="keyword_Container">
-      <h1 style="padding-left: 2rem;">키워드</h1>
-
-      <div class="keywordBox" id="Gkey-list">
-
-      </div>
-      <div class="keywordBox" id="Bkey-list">
-
-      </div>
     </div>
+  </section>
+  <section class="commentSection">
     <div id="comment_Container">
-      <h1 style="padding-left: 2rem;">한줄평</h1>
-      <div class="commentBox" id="Comment-list">
-
+      <h1 style="font-size: xx-large;">한줄평</h1>
+        <div id="Comment-list">
+        </div>
       </div>
     </div>
     {% endfor %}
