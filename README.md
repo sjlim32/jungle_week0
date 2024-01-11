@@ -64,4 +64,4 @@
 
 [자주 사용되는 Git 명령어](https://www.holaxprogramming.com/2018/11/01/git-commands/)
 
-[프로젝트 fork 하는 법](https://salix97.tistory.com/223)s
+[프로젝트 fork 하는 법](https://salix97.tistory.com/223)

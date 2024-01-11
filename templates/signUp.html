@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>정글 한 줄</title>
+
+    <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+  <style>
+    .topSection {
+      height: 10rem;
+      padding-top: 1rem;
+    }
+  
+    
+    .middleSection {
+      display: flex;
+      justify-content: center;
+  
+      margin-top: 5rem;
+    }
+  
+    #Title{
+      text-align: center;
+    }
+  
+    #form_Container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+  
+      width: 50%;
+      height: auto;
+  
+      border-radius: 30px;
+      border: 1px solid lightgray;
+    }
+  
+    .inputBox {
+      font-size: medium;
+      width: 30rem;
+      height: 3em;
+  
+      margin-bottom: 2rem;
+  
+      border: 1px solid lavender;
+      border-radius: 10px;
+    }
+  
+    .textArea {
+      width: 30rem;
+      height: 10rem;
+  
+      font-size:large;
+      border-radius: 10px;
+      border: 1px solid lightgray;      
+    }
+  
+    .img_Container {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      width: 30rem;
+      height: 10rem;
+  
+      margin: 1rem;
+  
+      border: 1px solid lightgray;
+      border-radius: 10px;
+    }
+  
+    .imgBox {
+      text-align: center;
+      width: 10rem;
+
+    }
+  
+    .button_Container {
+      display: flex;
+      justify-content: center;
+  
+      width: 50rem;
+      margin: 1rem;
+  
+      border-radius: 15px;
+    }
+  
+    .button {
+      font-size: larger;
+      width: 7rem;
+      height: 2rem;
+      margin: 0 3rem;
+
+      color: white;
+      background-color: darkgreen;
+      border-radius: 30px;  
+    }
+  </style>
+
+<script>
+  // login 데이터(id, pw)를 받아오기.
+  function signUp() {
+    var formData = new FormData();
+
+
+    formData.append('id', $("#id").val());
+    formData.append('pw', $("#pw").val());
+    formData.append('pwConf', $("#pwConf").val());
+    formData.append('name', $("#name").val());
+    formData.append('nickname', $("#nickname").val());
+    formData.append('myself', $("#myself").val());
+
+    // Add the image file to the FormData object
+    var fileInput = $('#fileInput')[0];
+    var file = fileInput.files[0];
+    formData.append('img', file);
+
+    $.ajax({
+      type: "POST",
+      url: "/user/feature/signup", 
+      data: formData, // 데이터를 넘겨줌 
+      contentType: false,
+      processData: false,
+      success: function (response) {
+        if (response["result"] == "success") {
+          alert("회원가입을 완료했습니다.");
+          window.location.href = '/user/login';
+        } else if (response["result"] == "fail") {
+          alert("회원가입에 실패했습니다.")
+        }
+      }
+    })
+    }  
+
+  function previewFile() {
+    var preview = document.getElementById('previewImage');
+    var fileInput = document.getElementById('fileInput');
+    var file = fileInput.files[0];
+    var reader = new FileReader();
+
+    reader.onloadend = function () {
+      preview.src = reader.result;
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    } else {
+      preview.src = "";
+    }
+  }
+
+  function validateFile() {
+    var fileInput = document.getElementById('fileInput');
+    var fileSize = fileInput.files[0].size; // 파일 크기 (bytes)
+    
+    // 파일 크기 제한 (5MB)
+    var maxSize = 5 * 1024 * 1024;
+    if (fileSize > maxSize) {
+        alert('파일 크기는 2MB를 초과할 수 없습니다.');
+        fileInput.value = ''; // 파일 선택 초기화
+        return;
+    }
+
+    // 파일 형식 제한 (예: 이미지 파일만 허용)
+    var allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+    var fileType = fileInput.files[0].type;
+    if (!allowedTypes.includes(fileType)) {
+        alert('지원되지 않는 파일 형식입니다. 이미지 파일만 업로드 가능합니다.');
+        fileInput.value = ''; // 파일 선택 초기화
+        return;
+    }
+
+    previewFile();
+}
+</script>
+</head>
+<body>
+  <section class="topSection">
+    <div class="logo">
+      <a href="/"><img src="../static/logo.png" width="300" height="120"></a>
+    </div>
+  </section>
+  <section class="middleSection">
+    <form id="form_Container" action="http://localhost:5001/user/feature/signup" method="post" enctype="multipart/form-data">
+      <h1 id="Title">회원가입</h1>
+      <input class="inputBox" id="id" placeholder="아이디를 입력해주세요." required >
+      <input class="inputBox" id="pw" type="password" placeholder="비밀번호를 입력해주세요." required>
+      <input class="inputBox" id="pwConf" type="password" placeholder="비밀번호를 한번 더 입력해주세요." required>
+      <input class="inputBox" id="name" placeholder="이름을 입력해주세요." required >
+      <input class="inputBox" id="nickname" name= "nickname" placeholder="별명을 입력해주세요." required>
+      <textarea class="textArea" id ="myself"placeholder="자기소개를 작성해주세요." style="resize: none;"></textarea>
+      <span class="img_Container">
+        <img class="imgBox" id="previewImage" alt="사진을 추가해주세요." />
+        <input type="file" name="file" id="fileInput" onchange="validateFile()" required>
+      </span>
+      <span class="button_Container">
+        <button onclick="signUp()" class="button" type="button" >가입</button>
+        <button onclick="location.href='/'" class="button" type="button" >취소</button>
+
+      </span>
+    </form>
+  </section>
+</body>
+</html>

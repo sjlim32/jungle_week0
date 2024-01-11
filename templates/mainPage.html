@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>정글 한 줄</title>
+
+  <!-- JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+  <style>
+    a {
+      color: black;
+      text-decoration: none;
+    }
+
+    a:hover {
+      color: goldenrod;
+      text-decoration: none;
+    }
+
+    .topSection {
+      display: flex;
+      justify-content: space-between;
+      height: 10rem;
+      padding-top: 1rem;
+    }
+
+    #user_Container {
+      text-align: right;
+
+      width: 30rem;
+      margin: 1rem 3rem 0 0;
+    }
+
+    .middleSection {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-around;
+
+      margin: 10rem 10rem;
+
+      border-radius: 40px;
+      border: 1px solid lightseagreen;
+    }
+
+    #search_Container {
+      flex-direction: column;
+      align-items: center;
+
+      width: auto;
+
+      margin-right: 3rem;
+
+      /* border: 1px solid black; */
+    }
+
+    .inputBox {
+      font-size: larger;
+      width: 50rem;
+      height: 5rem;
+
+      padding-left: 2rem;
+      margin-right: 3rem;
+
+      border-radius: 20px;
+      border: 1px solid gainsboro;
+    }
+
+    #sort_Container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      width: 15rem;
+      height: 15rem;
+
+
+      /* border: 1px solid black; */
+    }
+
+    .button {
+
+      width: 5rem;
+      height: 3rem;
+
+      color: white;
+      background-color: darkgreen;
+      border-radius: 30px;
+    }
+
+    .sorter {
+      font-size: large;
+      width: 12rem;
+      height: 3rem;
+      margin: 0.5rem;
+
+      color: white;
+      background-color: darkgreen;
+      border-radius: 30px;
+    }
+
+    .listSection {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      height: auto;
+    }
+
+    .infoContainer {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-around;
+
+      width: 75%;
+      height: 15rem;
+
+      margin-bottom: 3rem;
+
+      border-radius: 20px;
+      border: 3px solid lightgrey;
+    }
+
+    .imgBox {
+      width: 10rem;
+      height: 10rem;
+    }
+
+    .name {
+      text-align: center;
+      width: 10rem;
+    }
+
+    .keywordBox {
+      display: flex;
+      align-items: flex-end;
+      flex-flow: column wrap;
+
+      height: 100%;
+      width: auto;
+    }
+
+    .keyword {
+      align-items: center;
+      text-align: center;
+      font-size: 1.5rem;
+      height: auto;
+
+      margin: 1rem;
+      padding: 0.5rem;
+
+      /* background-color: crimson; */
+      border: 1px solid lightgray;
+      border-radius: 10px;
+    }
+  </style>
+
+  <script>
+    $(document).ready(function () {
+      showUser()
+    });
+    
+    function setPickName(name) {
+      sessionStorage.setItem("pName", name);
+      return name
+    }
+
+    function showUser() {
+      if (sessionStorage.getItem('name')) {
+        $('#user_Container').append(`
+        <div style="font-size:x-large;">
+          <a href="/user/${sessionStorage.getItem('name')}/comment" style=" font-size:xx-large;">${sessionStorage.getItem('name')}
+          </a>님 반갑습니다
+          <span id="logoutButton" style="margin-left:2rem; text-decoration: none; cursor: pointer; font-size:larger;">
+            로그아웃
+          </span>
+        <div>`
+        )
+
+        $('#logoutButton').on('click', function () {
+          // 로그아웃 시 필요한 동작 수행
+          sessionStorage.clear();
+          window.location.href = '/';
+        });
+
+      } else {
+        $('#user_Container').append(`
+        <div>
+          <a href="/user/login" style="text-decoration: none; font-size:xx-large;">로그인
+          </a>
+          <a href="/user/signup" style="margin-left:2rem; text-decoration: none; font-size:xx-large;">회원가입
+          </a>
+        <div>`
+        )
+      }
+    }
+
+    var loadedname = sessionStorage.getItem("name");
+    var loadedpName = sessionStorage.getItem("pName");
+    console.log(loadedname)
+    console.log(loadedpName)
+
+    // // @@ 선택된 교육생 세션 유지용, 일단 스트링으로 표현, merge 후 수정 예정 @@
+    // var pickId = "k"
+    // sessionStorage.setItem("pickId", pickId)
+    // // 아래는 로그인한 사용자 세션
+    // var loadedId = sessionStorage.getItem("myId");
+
+  </script>
+</head>
+
+<body>
+  <section class="topSection">
+    <div class="logo">
+      <a href="/main/list"><img src="{{ url_for('static', filename='logo.png') }}" width="300" height="120"
+          style="display:flex"></a>
+    </div>
+    <div id="user_Container">
+    </div>
+  </section>
+  <section class="middleSection">
+    <form id="search_Container" action="/main/search" method="post">
+      <input class="inputBox" placeholder="검색할 이름을 입력해주세요." name="name">
+      <button class="button" type="submit">검색</button>
+    </form>
+    <div id="sort_Container">
+      <h3>정렬 방식</h3>
+      <form action="/main/namesort" method="post">
+        <button class="sorter" type="submit">가나다 순으로</button>
+      </form>
+      <form action="/main/commentsort" method="post">
+        <button class="sorter" type="submit">코멘트 많은 순으로</button>
+      </form>
+
+    </div>
+  </section>
+  <section class="listSection">
+    {% for data in new_data %}
+    <div class="infoContainer">
+      <img class="imgBox" src="{{ url_for('static', filename='/uploads/' + data['Img']['filename']) }}" />
+      <div class="name">
+        <a style="font-size: xx-large; text-decoration-line: none; color: black;"
+          href="{{ url_for('userPage', user_name=data['Name']) }}"
+          onclick="setPickName('{{ data['Name'] }}')">
+          {{ data['Name'] }}
+        </a>
+      </div>
+      <div class="keywordBox">
+      {% for gkeyword in data.Gkeyword %}
+        <div class="keyword">
+          {{ gkeyword }}
+        </div>
+      {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+    </div>
+  </section>
+</body>
+
+</html>
