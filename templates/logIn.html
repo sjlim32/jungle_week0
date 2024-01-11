@@ -70,7 +70,7 @@
 
       color: white;
       background-color: darkgreen;
-      border-radius: 30px;  
+      border-radius: 30px;
     }
   </style>
 
@@ -84,7 +84,7 @@
         type: "POST",
         url: "/user/feature/login",
         contentType: "application/json",
-        data: JSON.stringify({id: id, pw: pw}),
+        data: JSON.stringify({ id: id, pw: pw }),
         success: function (response) {
           if (response["result"] == "success") {
             alert('로그인 성공!')

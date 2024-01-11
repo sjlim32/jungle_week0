@@ -176,10 +176,10 @@ $(document).ready(function () {
 
 
   function showUser() {
-    if (sessionStorage.getItem('name')) {
+    if (sessionStorage.getItem('id')) {
       $('#user_Container').append(`
         <div style="font-size:x-large;">
-          <a href="/user/${sessionStorage.getItem('name')}/comment" style=" font-size:xx-large;">${sessionStorage.getItem('name')}
+          <a href="/user/${sessionStorage.getItem('id')}/comment" style=" font-size:xx-large;">${sessionStorage.getItem('id')}
           </a>님 반갑습니다
           <span id="logoutButton" style="margin-left:2rem; text-decoration: none; cursor: pointer; font-size:larger;">
             로그아웃
@@ -206,10 +206,10 @@ $(document).ready(function () {
   }
 
   // 변수 불러오기(사용자 세션 유지용)
-  var loadedId = sessionStorage.getItem("name");
-  var loadedName = sessionStorage.getItem("pName");
-  console.log(loadedId)
+  var loadedName = sessionStorage.getItem("name");
+  var loadedpName = sessionStorage.getItem("pName");
   console.log(loadedName)
+  console.log(loadedpName)
 
 
   // 페이지 로딩 후 함수가 실행 
@@ -231,7 +231,7 @@ $(document).ready(function () {
     $.ajax({
       type: "POST",
       url: "/user/feature/getinfo",
-      data: { 'pname_give': loadedName },
+      data: { 'pname_give': loadedpName, 'name_give':loadedName },
       success: function (response) {
         if (response['result'] != 'success') {
           alert("정보를 받아오지 못했습니다.")
@@ -239,10 +239,11 @@ $(document).ready(function () {
         }
         // API로부터 받은 response에서 user_info의 키 값으로 교육생 정보 얻기
         let userInfo = response['user_info']
+        let userInfo_p = response['user_info_p']
 
-        let name = userInfo['Name']
+        let name = userInfo_p['Name']
         $('#myName').text(name)
-        let mySelf = userInfo['Myself']
+        let mySelf = userInfo_p['Myself']
         $('#mySelf').text(mySelf)
       }
     })
@@ -255,25 +256,23 @@ $(document).ready(function () {
       type: "POST",
       url: "/user/feature/getkey",
       // 명단에서 클릭한 사람으로 바꿔야
-      data: { 'pname_give': loadedName },
+      data: { 'pname_give': loadedpName },
       success: function (response) {
         if (response['result'] != 'success') {
           alert("정보를 받아오지 못했습니다.")
           return
         }
         let TKey = response['TKey']
-
         let Nick = response['Nickname']
         let Comments = response['Comment']
-        let IsShow = response['IsShow']
         let IsWrited = response['IsWrited']
 
         // 부정 키워드는 자기 자신만 보기
-        if (loadedId == loadedName && IsShow >= 10) {
-          $('#Bkey-list').css('display', 'flex');
-        } else {
-          $('#Bkey-list').css('display', 'none');
-        }
+        // if (loadedId == loadedName && IsShow >= 10) {
+        //   $('#Bkey-list').css('display', 'flex');
+        // } else {
+        //   $('#Bkey-list').css('display', 'none');
+        // }
 
         addKeyword(TKey, Comments, IsWrited, Nick)
       }
@@ -283,27 +282,35 @@ $(document).ready(function () {
       for (let i = 0; i < TKey.length; i++) {
         let TKeyValue = Object.keys(TKey[i]).join(", "); // GPT
 
-        $('#Bkey-list').append(`
-            <span class="B_keyword">${TKeyValue}</span>
-        `);
+        // $('#Bkey-list').append(`
+        //     <span class="B_keyword">${TKeyValue}</span>
+        // `);
 
         for (let i = 0; i < Comments.length; i++) {
           let Comment = Object.values(Comments[i]).join('') // GPT
           $('#Comment-list').append(`
-          <div class="comment">${Comment}</div>
           <div class="comment">${Nick}</div>
+          <div class="comment">${Comment}</div>
         `);
         }
 
-        if (IsWrited.includes(loadedId)) {
-          $('#Bkey-list').css('display', 'flex');
-          $('#Gkey-list').css('display', 'flex');
-          $('#Comment-list').css('display', 'flex');
-        } else {
-          $('#Bkey-list').css('display', 'none');
-          $('#Gkey-list').css('display', 'none');
-          $('#Comment-list').css('display', 'none');
-        }
+         if (IsWrited.includes(loadedName)) {
+           $('#keyword_Container').css('display', 'flex');
+           $('#Comment-list').css('display', 'flex');
+         } else {
+           $('#keyword_Container').css('display', 'none');
+           $('#Comment-list').css('display', 'none');
+         }
+
+        // if (IsWrited.includes(loadedName.trim())) {
+        //   $('#keyword_Container').css('display', 'flex');
+        //   $('#Comment-list').css('display', 'flex');
+        // } else {
+        //   $('#keyword_Container').css('display', 'none');
+        //   $('#Comment-list').css('display', 'none');
+        // }
+
+        
         // 워드클라우드 모듈불러오기
         zingchart.MODULESDIR = 'https://cdn.zingchart.com/modules/';
 

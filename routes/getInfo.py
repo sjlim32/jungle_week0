@@ -10,15 +10,17 @@ getInfo_bp = Blueprint('getinfo', __name__, url_prefix="/user/feature")
 # 교육생의 정보를 제공하는 API
 @getInfo_bp.route('/getinfo', methods=['POST'])
 def getInfo():
-  
+
   pname_receive = request.form["pname_give"]
-  info = db.user.find_one({"Name": pname_receive})
+  name_receive = request.form["name_give"]
+  info_p = db.user.find_one({"Name": pname_receive})
+  info = db.user.find_one({"Name": name_receive})
 
   # JSON 형식 중 ObjectId는 BSON 타입이라 ajax에 반환될 때 직렬화해주어야 한다.
   if info:
     info["_id"] = str(info["_id"])
-  
-  return jsonify({"result": "success", "user_info": info})
+    info_p["_id"] = str(info_p["_id"])
+  return jsonify({"result": "success", "user_info_p": info_p, "user_info": info })
 
 # 교육생의 장단점 키워드를 정렬
 @getInfo_bp.route('/getkey', methods=['POST'])
