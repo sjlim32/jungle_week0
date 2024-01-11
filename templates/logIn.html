@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+  <title>정글 한 줄</title>
+
+  <style>
+    .topSection {
+      height: 10rem;
+      padding-top: 1rem;
+    }
+
+    .logo {
+      width: 10rem;
+    }
+
+    .middleSection {
+      display: flex;
+      justify-content: center;
+
+      margin-top: 5rem;
+    }
+
+    #Title {
+      text-align: center;
+    }
+
+    #form_Container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      width: 50%;
+      height: auto;
+
+      border: 1px solid lightgray;
+      border-radius: 20px;
+    }
+
+    .inputBox {
+      font-size: medium;
+      width: 30rem;
+      height: 3em;
+
+      margin: 1rem;
+
+      border: 1px solid lavender;
+      border-radius: 10px;
+    }
+
+    .button_Container {
+      display: flex;
+      justify-content: center;
+
+      width: 40rem;
+      margin: 3rem;
+    }
+
+    .button {
+      font-size: larger;
+      width: 10rem;
+      height: 2rem;
+      margin: 0 3rem;
+
+      color: white;
+      background-color: darkgreen;
+      border-radius: 30px;
+    }
+  </style>
+
+  <script>
+    // login 데이터(id, pw)를 받아오기.
+    function postInfo() {
+      let id = $("#id").val()
+      let pw = $("#password").val()
+
+      $.ajax({
+        type: "POST",
+        url: "/user/feature/login",
+        contentType: "application/json",
+        data: JSON.stringify({ id: id, pw: pw }),
+        success: function (response) {
+          if (response["result"] == "success") {
+            alert('로그인 성공!')
+            var token = response.token;
+            sessionStorage.setItem('jwttoken', token);
+            sessionStorage.setItem('name', response.user);
+            window.location.href = '/main/list';
+          } else if (response["result"] == "id_fail") {
+            alert("아이디가 틀렸습니다.")
+            window.location.href = '/user/login';
+          } else {
+            alert("비밀번호가 틀렸습니다.")
+            window.location.href = '/user/login';
+          }
+        }
+      })
+    }
+
+  </script>
+</head>
+
+<body>
+  <section class="topSection">
+    <div class="logo">
+      <a href="/"><img src="../static/logo.png" width="300" height="120"></a>
+    </div>
+  </section>
+  <section class="middleSection">
+    <form id="form_Container">
+      <h1 id="Title">로그인</h1>
+      <input class="inputBox" id="id" placeholder="아이디를 입력해주세요.">
+      <input class="inputBox" id="password" type="password" placeholder="비밀번호를 입력해주세요.">
+      <span class="button_Container">
+        <!-- type="submit"에서 "button"으로 수정 -->
+        <button onclick="postInfo()" class="button" type="button">로그인</button>
+        <!-- location.href''은 페이지 이동(뒤로가기 가능) -->
+        <button onclick="location.href='http://localhost:5001/user/signup?'" class="button" type="button">회원가입
+          하기</button>
+      </span>
+    </form>
+  </section>
+</body>
+
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- JS -->
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+  <title>정글 한 줄</title>
+
+  <style>
+    .middleSection {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+
+      margin-top: 5rem;
+    }
+
+    #keyword_Container {
+      width: 75%;
+      height: 50%;
+      margin: 2rem 2rem;
+
+      border: 1px solid black;
+    }
+
+    .keywordBox {
+      display: flex;
+      flex-flow: row wrap;
+      align-items: center;
+
+      margin: 0 0 3rem 0;
+    }
+
+    .keyword {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 1.5rem;
+      width: 10%;
+      height: 15%;
+
+      margin: 1rem;
+
+      background-color: whitesmoke;
+      border-radius: 15px;
+    }
+
+    #comment_Container {
+      width: 75%;
+      height: auto;
+      margin: 2rem 2rem;
+
+      border: 1px solid black;
+    }
+
+    .commentBox {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: x-large;
+      width: 90%;
+      height: auto;
+      resize: none;
+      overflow: hidden;
+
+      padding: 1rem;
+      margin: 1rem;
+
+
+      border-radius: 10px;
+    }
+
+    .button {
+      font-size: larger;
+      width: 10rem;
+      height: 3rem;
+      margin: 0 3rem;
+
+      color: white;
+      background-color: darkgreen;
+      border-radius: 30px;  
+    }
+  </style>
+  <script>
+    // 변수 불러오기(사용자 세션 유지용)
+    var loadedId = sessionStorage.getItem("name");
+    var loadedName = sessionStorage.getItem("pName");
+
+    var selectedGKey = [];
+    var selectedBKey = [];
+
+    function isGClick(button) {
+      var keyword = button.innerHTML;
+
+      // 이미 선택된 키워드인지 확인
+      if (selectedGKey.includes(keyword)) {
+        // 이미 선택된 경우, 배열에서 제거하고 색상 초기화
+        selectedGKey = selectedGKey.filter(item => item !== keyword);
+        button.style.color = "";
+      } else {
+        // 아직 선택되지 않은 경우, 최대 3개까지만 추가하고 색상 변경
+        if (selectedGKey.length < 3) {
+          selectedGKey.push(keyword);
+          button.style.color = "red";
+        }
+      }
+      // 선택된 키워드 출력
+      // console.log("Selected Keywords:", selectedGKey);
+    }
+
+    function isBClick(button) {
+      var keyword = button.innerHTML;
+
+      if (selectedBKey.includes(keyword)) {
+        selectedBKey = selectedBKey.filter(item => item !== keyword);
+        button.style.color = "";
+      } else {
+        if (selectedBKey.length < 1) {
+          selectedBKey.push(keyword);
+          button.style.color = "blue";
+        }
+        // 선택된 키워드 출력
+        // console.log("Selected Keywords:", selectedBKey);
+      }
+    }
+
+    // 클릭 이벤트 핸들러 연결
+    $(".keywordBox button").on("click", function () {
+      var isG = $(this).closest(".keywordBox").attr("id") === "select";
+      if (isG) {
+        selectedGKey = isGClick(this);  // 반환값을 selectedGKey에 할당
+      } else {
+        selectedBKey = isBClick(this);  // 반환값을 selectedBKey에 할당
+      }
+    });
+
+    // Ajax로 서버로 데이터 전송
+    function sendData() {
+      var comment = $("#inputComment").val();
+      $.ajax({
+        type: "POST",
+        url: "/user/feature/getdata",
+        data: {'id_give': loadedId, 'pname_give': loadedName, 'comment_give': comment,
+        'selectedGKey': JSON.stringify(selectedGKey),
+        'selectedBKey': JSON.stringify(selectedBKey)
+        // ajax에서 API로 배열을 넘기기 위해 문자열로 변환한다.
+        },
+        success: function (response) {
+          if (response['result'] != 'success') {
+            alert("정보를 받아오지 못했습니다.")
+            return;
+          } 
+          // 성공한 경우
+          alert("등록이 완료되었습니다!")
+          console.log(response)
+          window.location.href = '/main/list' ;
+        }
+      });
+    }
+
+  </script>
+</head>
+
+<body>
+  <section class="middleSection">
+    <!-- <h1>춘식이(세션 수정 예정)</h1> -->
+
+    <div id="keyword_Container">
+      <h1 style="padding-left: 2rem;">장점 키워드를 선택해주세요. (최대 3개)</h1>
+      <div class="keywordBox">
+        <button class="keyword" onclick="isGClick(this)">성실함</button>
+        <button class="keyword" onclick="isGClick(this)">친근함</button>
+        <button class="keyword" onclick="isGClick(this)">긍정맨</button>
+        <button class="keyword" onclick="isGClick(this)">리더쉽</button>
+        <button class="keyword" onclick="isGClick(this)">노력파</button>
+        <button class="keyword" onclick="isGClick(this)">꾀돌이</button>
+        <button class="keyword" onclick="isGClick(this)">엉뚱함</button>
+        <button class="keyword" onclick="isGClick(this)">청결</button>
+        <button class="keyword" onclick="isGClick(this)">부지런</button>
+        <button class="keyword" onclick="isGClick(this)">솔직담백</button>
+        <button class="keyword" onclick="isGClick(this)">이타적</button>
+        <button class="keyword" onclick="isGClick(this)">활발</button>
+        <button class="keyword" onclick="isGClick(this)">재치만점</button>
+        <button class="keyword" onclick="isGClick(this)">감성적</button>
+        <button class="keyword" onclick="isGClick(this)">완벽주의</button>
+      </div>
+      <h1 style="padding-left: 2rem;">단점 키워드를 선택해주세요. (1개)</h1>
+      <div class="keywordBox">
+        <button class="keyword" onclick="isBClick(this)">게으름</button>
+        <button class="keyword" onclick="isBClick(this)">다혈질</button>
+        <button class="keyword" onclick="isBClick(this)">이기적</button>
+        <button class="keyword" onclick="isBClick(this)">거만</button>
+        <button class="keyword" onclick="isBClick(this)">고지식</button>
+        <button class="keyword" onclick="isBClick(this)">수동적</button>
+        <button class="keyword" onclick="isBClick(this)">욕쟁이</button>
+        <button class="keyword" onclick="isBClick(this)">부정파</button>
+        <button class="keyword" onclick="isBClick(this)">새가슴</button>
+        <button class="keyword" onclick="isBClick(this)">황소고집</button>
+        <button class="keyword" onclick="isBClick(this)">더러움</button>
+        <button class="keyword" onclick="isBClick(this)">잠만보</button>
+        <button class="keyword" onclick="isBClick(this)">벌구</button>
+        <button class="keyword" onclick="isBClick(this)">건망증</button>
+        <button class="keyword" onclick="isBClick(this)">욕심쟁이</button>
+      </div>
+    </div>
+    <div id="comment_Container">
+      <h1 style="padding-left: 2rem;"> 한줄평</h1>
+      <input class="commentBox" id="inputComment" placeholder="한줄평을 작성해주세요.(최대 30자)" maxlength="30"></input>
+    </div>
+
+    <button type="button" class="button" onclick="sendData()">등록하기</button>
+  </section>
+</body>
+
+</html>
