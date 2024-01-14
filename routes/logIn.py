@@ -4,6 +4,7 @@ from pymongo import MongoClient
 import jwt
 import datetime
 
+# client = MongoClient('mongodb://admin:w00mini@43.201.26.201', 27017)
 client = MongoClient('localhost', 27017)
 db = client.jungle_week0
 

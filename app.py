@@ -2,18 +2,21 @@ from flask import Flask, render_template, request, jsonify, send_from_directory,
 from bson import ObjectId
 from werkzeug.utils import secure_filename
 import os
-
 from jinja2 import Template
-
 from pymongo import MongoClient
-
 from routes import getInfo_bp, logIn_bp, main_bp
-
 import re, json, os, uuid
 
 app = Flask(__name__)
 
-# * DB 연결
+"""
+DB 연결, EC2 server MongoDB용 // 'mongodb://설정한 아이디:비밀번호@내AWS아이피'
+배포용으로 변경하면 localhost들도 서버용으로 변경해야 함.
+DB주소 수정해야 할 곳(localhost->mongodb://admin:w00mini@43.201.26.201) - logIn.py, getInfo.py
+경로 수정해야 할 곳(href에서 주소 앞 43.201.26.201 붙이기)  Signup.html, logIn.html
+"""
+# client = MongoClient('mongodb://admin:w00mini@43.201.26.201', 27017)
+# * DB 연결, local용
 client = MongoClient('localhost', 27017)
 db = client.jungle_week0
 

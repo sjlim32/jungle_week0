@@ -58,6 +58,15 @@
 - `!BREAKING CHANGE` : 커다란 API 변경의 경우
 - `!HOTFIX` : 급하게 치명적인 버그를 고쳐야 하는 경우
 
+
+# 김동준 # 
+- 1월 14일(일요일)에 배포할 예정
+- 흐리게보이는 기능 추가해보기
+
+
+
+
+
 ## 💦 참고
 
 [Git 브랜치의 종류](https://gmlwjd9405.github.io/2018/05/11/types-of-git-branch.html)
@@ -65,3 +74,4 @@
 [자주 사용되는 Git 명령어](https://www.holaxprogramming.com/2018/11/01/git-commands/)
 
 [프로젝트 fork 하는 법](https://salix97.tistory.com/223)
+
